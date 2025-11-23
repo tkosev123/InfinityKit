@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -18,7 +19,9 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 rootProject.name = "InfinityKit"
 include(":app")
-include(":presentation")
+include(":domain")
+include(":data")
+include(":di")
+include(":mvi")
