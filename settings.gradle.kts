@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "InfinityKit"
 include(":app")
- 
+include(":presentation")
