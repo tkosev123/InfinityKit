@@ -38,13 +38,9 @@ fun NavigationAuthentication(
         ),
         entryProvider = entryProvider {
             entry<AuthenticationScreen.LoginScreen> {
-                LoginScreenUi(
-                    modifier = modifier,
-                    navBackStack = backStack
-                )
+                LoginScreenUi(modifier = modifier, navBackStack = backStack)
             }
             entry<AuthenticationScreen.RegisterScreen> {
-                val viewModel = RegisterViewModel()
                 RegistrationUi(modifier = modifier)
             }
         }
