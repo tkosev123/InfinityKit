@@ -1,6 +1,5 @@
 package com.tk.infinitykit.presentation.features.login
 
-import androidx.lifecycle.SavedStateHandle
 import com.tk.domain.models.LoginResult
 import com.tk.domain.repository.AuthenticationRepository
 import com.tk.mvi.BaseViewModel
@@ -9,7 +8,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val authenticationRepository: AuthenticationRepository
 ) : BaseViewModel<LoginState, LoginEvent, LoginIntent>(LoginState()) {
 

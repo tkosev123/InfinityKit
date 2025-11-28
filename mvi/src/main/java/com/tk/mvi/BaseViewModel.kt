@@ -2,10 +2,10 @@ package com.tk.mvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
@@ -20,14 +20,14 @@ abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
     }
 
     // -------------------------------------------------------
-    //  UI EVENTS (Hot SharedFlow OR Channel — no replay)
+    //  UI EVENTS (Hot SharedFlow — no replay)
     // -------------------------------------------------------
-    private val _events = Channel<E>(Channel.BUFFERED)
-    val events = _events.receiveAsFlow()
+    private val _events = MutableSharedFlow<E>()
+    val events = _events.asSharedFlow()
 
     protected fun sendEvent(event: E) {
         viewModelScope.launch {
-            _events.send(event)
+            _events.emit(event)
         }
     }
 
