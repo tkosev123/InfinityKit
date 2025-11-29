@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     id("com.tk.buildlogic.kotlin")
+    id("com.tk.buildlogic.hilt")
 }
 
 android {

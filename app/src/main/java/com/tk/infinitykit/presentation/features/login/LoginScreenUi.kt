@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,13 +20,15 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.tk.infinitykit.R
 import com.tk.infinitykit.presentation.components.GenericButton
 import com.tk.infinitykit.presentation.components.IKDialog
+import com.tk.infinitykit.presentation.components.IKPasswordInputField
+import com.tk.infinitykit.presentation.components.IKTextInputField
 import com.tk.infinitykit.presentation.navigation.authentication.AuthenticationScreen
 import com.tk.infinitykit.presentation.theme.TextSizes
 import com.tk.infinitykit.presentation.theme.spacing
@@ -64,29 +65,35 @@ fun LoginScreenUi(
             Text(
                 text = stringResource(R.string.login_welcome_back),
                 fontSize = TextSizes.XXL,
+                fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
             )
 
-            OutlinedTextField(
+            IKTextInputField(
                 value = state.email,
                 onValueChange = { viewModel.onIntent(LoginIntent.EmailChanged(it)) },
                 label = { Text(stringResource(R.string.login_email)) },
+                isError = state.isEmailError,
+                errorText = state.emailErrorText,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = MaterialTheme.spacing.medium),
-                singleLine = true
             )
 
-            OutlinedTextField(
+            IKPasswordInputField(
                 value = state.password,
                 onValueChange = { viewModel.onIntent(LoginIntent.PasswordChanged(it)) },
                 label = { Text(stringResource(R.string.login_password)) },
-                visualTransformation = PasswordVisualTransformation(),
+                isError = state.isPasswordError,
+                errorText = state.passwordErrorText,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = MaterialTheme.spacing.mediumLarge),
-                singleLine = true
+                isPasswordVisible = state.isPasswordVisible,
+                onPasswordToggle = {
+                    viewModel.onIntent(LoginIntent.TogglePasswordVisibility)
+                }
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -113,12 +120,13 @@ fun LoginScreenUi(
         if (errorMessage != null) {
             IKDialog(
                 modifier = Modifier,
-                title = "Title",
+                title = stringResource(R.string.generic_error_title),
                 message = errorMessage ?: "",
-                buttonText = "OK"
+                buttonText = stringResource(R.string.generic_action_ok)
             ) {
                 errorMessage = null
             }
         }
     })
 }
+

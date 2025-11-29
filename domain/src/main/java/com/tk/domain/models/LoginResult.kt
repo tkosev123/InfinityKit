@@ -1,12 +1,24 @@
 package com.tk.domain.models
 
-sealed class LoginResult {
-    object  Success : LoginResult()
-    data class Error(val error: AuthenticationError) : LoginResult()
+sealed interface LoginResult {
+    object  Success : LoginResult
+    data class Error(val error: AuthenticationError) : LoginResult
 }
 
-sealed class AuthenticationError {
-    object InvalidCredentials : AuthenticationError()
-    object UserNotFound : AuthenticationError()
-    data class Unknown(val message: String?) : AuthenticationError()
+sealed interface AuthenticationError {
+    sealed interface Validation : AuthenticationError {
+        object EmptyEmail : Validation
+        object InvalidEmail : Validation
+        object EmptyPassword : Validation
+        object ShortPassword : Validation
+
+        object EmptyEmailPassword: Validation
+    }
+
+    sealed interface Remote : AuthenticationError {
+        object InvalidCredentials : Remote
+        object UserNotFound : Remote
+    }
+
+    data class Unknown(val message: String? = null) : AuthenticationError
 }
