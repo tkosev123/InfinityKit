@@ -29,8 +29,8 @@ class AuthenticationRepositoryImp @Inject constructor(
 
     private fun mapFirebaseError(throwable: Throwable): AuthenticationError {
         return when (throwable) {
-            is FirebaseAuthInvalidCredentialsException -> AuthenticationError.InvalidCredentials
-            is FirebaseAuthInvalidUserException -> AuthenticationError.UserNotFound
+            is FirebaseAuthInvalidCredentialsException -> AuthenticationError.Remote.InvalidCredentials
+            is FirebaseAuthInvalidUserException -> AuthenticationError.Remote.UserNotFound
             else -> AuthenticationError.Unknown(throwable.message)
         }
     }

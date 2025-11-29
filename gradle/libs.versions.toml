@@ -12,13 +12,13 @@ nav3Core = "1.0.0"
 lifecycleViewmodelNav3 = "2.10.0"
 appcompat = "1.7.1"
 material = "1.13.0"
+material3 = "1.4.0"
 retrofit = "3.0.0"
 loggingInterceptor = "5.3.0"
 kotlinxSerializationJson = "1.9.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
 hiltAndroid = "2.57.2"
 hiltAndroidCompiler = "2.57.2"
-materialIconsExtended = "1.7.8"
 extendedspans = "1.4.0"
 constraintlayoutCompose = "1.1.1"
 glide = "1.0.0-beta08"
@@ -52,12 +52,11 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3"}
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplash" }
 
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
@@ -83,12 +82,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 #Glide
 glide = { module = "com.github.bumptech.glide:compose", version.ref = "glide" }
 
-#View
-extendedspans = { module = "me.saket.extendedspans:extendedspans", version.ref = "extendedspans" }
-androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
-
 #Icons
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 
 #Testing
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
