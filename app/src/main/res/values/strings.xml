@@ -8,4 +8,12 @@
     <string name="login_error_invalid_email_or_password">Invalid email or password</string>
     <string name="login_error_user_does_not_exist">User does not exist</string>
     <string name="login_error_unexpected">Unexpected error</string>
+    <string name="login_error_empty_email">Email cannot be empty</string>
+    <string name="login_error_empty_password">Password cannot be empty</string>
+    <string name="login_error_email_invalid_format">Invalid email format</string>
+    <string name="login_error_password_below_required_length">Password must be at least 6 characters</string>
+    <string name="login_error_empty_email_password">Email and password cannot be empty</string>
+    <string name="login_error_incorrect_field">Incorrect</string>
+    <string name="generic_action_ok">OK</string>
+    <string name="generic_error_title">Whoops!</string>
 </resources>
