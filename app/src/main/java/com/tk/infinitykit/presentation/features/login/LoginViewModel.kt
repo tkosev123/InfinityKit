@@ -8,7 +8,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository
+    private val authenticationRepository: AuthenticationRepository,
+    private val loginErrorUiMapper: LoginErrorUiMapper
 ) : BaseViewModel<LoginState, LoginEvent, LoginIntent>(LoginState()) {
 
     override suspend fun handleIntent(intent: LoginIntent) {
@@ -33,7 +34,8 @@ class LoginViewModel @Inject constructor(
 
             is LoginResult.Error -> {
                 updateState { copy(isLoading = false) }
-                sendEvent(LoginEvent.ShowError(result.error.toString()))
+                val errorMessage = loginErrorUiMapper.toUiModel(result.error)
+                sendEvent(LoginEvent.ShowError(errorMessage))
             }
         }
     }
