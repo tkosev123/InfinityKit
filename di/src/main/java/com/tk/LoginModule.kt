@@ -1,4 +1,4 @@
-package com.tk.di
+package com.tk
 
 import com.tk.data.repository.AuthenticationRepositoryImp
 import com.tk.domain.repository.AuthenticationRepository
@@ -9,8 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
-
+abstract class LoginModule {
     @Binds
     abstract fun bindAuthenticationRepository(impl: AuthenticationRepositoryImp): AuthenticationRepository
 }

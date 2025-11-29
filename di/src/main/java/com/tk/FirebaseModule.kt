@@ -1,4 +1,4 @@
-package com.tk.di
+package com.tk
 
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
