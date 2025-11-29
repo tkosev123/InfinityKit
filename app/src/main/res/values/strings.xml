@@ -5,4 +5,7 @@
     <string name="login_password">Password</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
+    <string name="login_error_invalid_email_or_password">Invalid email or password</string>
+    <string name="login_error_user_does_not_exist">User does not exist</string>
+    <string name="login_error_unexpected">Unexpected error</string>
 </resources>

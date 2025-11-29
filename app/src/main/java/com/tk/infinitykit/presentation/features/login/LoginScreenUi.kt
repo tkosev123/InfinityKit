@@ -1,5 +1,6 @@
 package com.tk.infinitykit.presentation.features.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,17 +14,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import com.tk.infinitykit.R
 import com.tk.infinitykit.presentation.components.GenericButton
+import com.tk.infinitykit.presentation.components.IKDialog
 import com.tk.infinitykit.presentation.navigation.authentication.AuthenticationScreen
 import com.tk.infinitykit.presentation.theme.TextSizes
 import com.tk.infinitykit.presentation.theme.spacing
@@ -36,6 +40,7 @@ fun LoginScreenUi(
     navBackStack: SnapshotStateList<NavKey>
 ) {
     val state by viewModel.state.collectAsState()
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     MviScreen(stateFlow = viewModel.state, eventFlow = viewModel.events, onEvent = { event ->
         when (event) {
@@ -43,12 +48,15 @@ fun LoginScreenUi(
                 navBackStack.add(AuthenticationScreen.RegisterScreen)
             }
 
-            is LoginEvent.ShowError -> { }
+            is LoginEvent.ShowError -> {
+                errorMessage = event.message
+            }
         }
     }, content = {
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .padding(MaterialTheme.spacing.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -77,7 +85,7 @@ fun LoginScreenUi(
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp),
+                    .padding(bottom = MaterialTheme.spacing.mediumLarge),
                 singleLine = true
             )
 
@@ -94,11 +102,23 @@ fun LoginScreenUi(
             Text(
                 text = stringResource(R.string.register_button),
                 fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = MaterialTheme.spacing.medium)
                     .clickable {
                         navBackStack.add(AuthenticationScreen.RegisterScreen)
                     })
+        }
+
+        if (errorMessage != null) {
+            IKDialog(
+                modifier = Modifier,
+                title = "Title",
+                message = errorMessage ?: "",
+                buttonText = "OK"
+            ) {
+                errorMessage = null
+            }
         }
     })
 }
