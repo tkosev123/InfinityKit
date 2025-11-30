@@ -95,7 +95,7 @@ fun IKDialog(
 @Composable
 fun IKDialogPreview() {
     IKDialog(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(MaterialTheme.spacing.medium),
         title = "Delete Item",
         message = "Are you sure you want to delete this item?",
         buttonText = "OK",

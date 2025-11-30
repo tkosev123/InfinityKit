@@ -1,19 +1,25 @@
 package com.tk.infinitykit.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import com.tk.infinitykit.R
+import com.tk.infinitykit.presentation.theme.spacing
 
 @Composable
 fun IKTextInputField(
@@ -97,6 +103,69 @@ private fun GenericTextField(
                     )
                 }
             }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun IKInputTextPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+    {
+        IKTextInputField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Email") },
+            isError = false
+        )
+
+        IKTextInputField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Email") },
+            isError = true
+        )
+
+        IKPasswordInputField(
+            value = "Test12345",
+            onValueChange = {},
+            isPasswordVisible = false,
+            onPasswordToggle = {},
+            label = { Text("Password") },
+            isError = false
+        )
+
+        IKPasswordInputField(
+            value = "Test12345",
+            onValueChange = {},
+            isPasswordVisible = false,
+            onPasswordToggle = {},
+            label = { Text("Password") },
+            isError = true
+        )
+
+        IKPasswordInputField(
+            value = "Test12345",
+            onValueChange = {},
+            isPasswordVisible = true,
+            onPasswordToggle = {},
+            label = { Text("Password") },
+            isError = false
+        )
+
+        IKPasswordInputField(
+            value = "Test12345",
+            onValueChange = {},
+            isPasswordVisible = true,
+            onPasswordToggle = {},
+            label = { Text("Password") },
+            isError = true
         )
     }
 }
