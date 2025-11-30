@@ -1,30 +1,18 @@
 package com.tk.domain.utils
 
-
 import com.tk.domain.models.CredentialsValidationError
 import javax.inject.Inject
 
 class CredentialsValidator @Inject constructor() {
-
-    fun validate(email: String, password: String): CredentialsValidationError? {
-
-        if (email.isBlank() && password.isBlank())
-            return CredentialsValidationError.EmptyEmailPassword
-
-        if (email.isBlank())
-            return CredentialsValidationError.EmptyEmail
-
-        if (!EMAIL_REGEX.matches(email))
-            return CredentialsValidationError.InvalidEmail
-
-        if (password.isBlank())
-            return CredentialsValidationError.EmptyPassword
-
-        if (password.length < 6)
-            return CredentialsValidationError.ShortPassword
-
-        return null
-    }
+    fun validate(email: String, password: String): CredentialsValidationError? =
+        when {
+            email.isBlank() && password.isBlank() -> CredentialsValidationError.EmptyEmailPassword
+            email.isBlank() -> CredentialsValidationError.EmptyEmail
+            !EMAIL_REGEX.matches(email) -> CredentialsValidationError.InvalidEmail
+            password.isBlank() -> CredentialsValidationError.EmptyPassword
+            password.length < 6 -> CredentialsValidationError.ShortPassword
+            else -> null
+        }
 
     companion object {
         private val EMAIL_REGEX =
