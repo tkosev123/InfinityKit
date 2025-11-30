@@ -1,6 +1,6 @@
 package com.tk
 
-import com.tk.data.repository.AuthenticationRepositoryImp
+import com.tk.repository.AuthenticationRepositoryImp
 import com.tk.domain.repository.AuthenticationRepository
 import dagger.Binds
 import dagger.Module

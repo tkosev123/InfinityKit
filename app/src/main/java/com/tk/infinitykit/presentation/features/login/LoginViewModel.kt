@@ -62,33 +62,27 @@ class LoginViewModel @Inject constructor(
         when (error) {
             is LoginError.Validation -> handleValidationError(error.error, message)
 
-            LoginError.Remote.InvalidCredentials -> {
-                updateState {
-                    copy(
-                        isEmailError = true,
-                        isPasswordError = true,
-                        emailErrorText = uiMapper.getIncorrectFieldMessage(),
-                        passwordErrorText = uiMapper.getIncorrectFieldMessage()
-                    )
-                }
+            LoginError.Remote.InvalidCredentials -> updateState {
+                copy(
+                    isEmailError = true,
+                    isPasswordError = true,
+                    emailErrorText = uiMapper.getIncorrectFieldMessage(),
+                    passwordErrorText = uiMapper.getIncorrectFieldMessage()
+                )
             }
 
-            LoginError.Remote.UserNotFound -> {
-                updateState {
-                    copy(
-                        isPasswordError = true,
-                        passwordErrorText = message
-                    )
-                }
+            LoginError.Remote.UserNotFound -> updateState {
+                copy(
+                    isPasswordError = true,
+                    passwordErrorText = message
+                )
             }
 
-            is LoginError.Unknown -> {
-                updateState {
-                    copy(
-                        isPasswordError = true,
-                        passwordErrorText = message
-                    )
-                }
+            is LoginError.Unknown -> updateState {
+                copy(
+                    isPasswordError = true,
+                    passwordErrorText = message
+                )
             }
         }
     }

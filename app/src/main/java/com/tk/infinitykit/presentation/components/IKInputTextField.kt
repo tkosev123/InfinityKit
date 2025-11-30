@@ -84,27 +84,25 @@ private fun GenericTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    Column {
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            label = label,
-            modifier = modifier,
-            singleLine = true,
-            isError = isError,
-            visualTransformation = visualTransformation,
-            trailingIcon = trailingIcon,
-            supportingText = {
-                if (isError) {
-                    Text(
-                        text = errorText.orEmpty(),
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = label,
+        modifier = modifier,
+        singleLine = true,
+        isError = isError,
+        visualTransformation = visualTransformation,
+        trailingIcon = trailingIcon,
+        supportingText = {
+            if (isError) {
+                Text(
+                    text = errorText.orEmpty(),
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
-        )
-    }
+        }
+    )
 }
 
 @Preview(showBackground = true)
@@ -113,14 +111,14 @@ fun IKInputTextPreview() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = MaterialTheme.spacing.medium),
+            .padding(MaterialTheme.spacing.medium),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally
-    )
-    {
+    ) {
         IKTextInputField(
             value = "",
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             label = { Text("Email") },
             isError = false
         )
@@ -128,6 +126,7 @@ fun IKInputTextPreview() {
         IKTextInputField(
             value = "",
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             label = { Text("Email") },
             isError = true
         )
@@ -135,6 +134,7 @@ fun IKInputTextPreview() {
         IKPasswordInputField(
             value = "Test12345",
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             isPasswordVisible = false,
             onPasswordToggle = {},
             label = { Text("Password") },
@@ -144,6 +144,7 @@ fun IKInputTextPreview() {
         IKPasswordInputField(
             value = "Test12345",
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             isPasswordVisible = false,
             onPasswordToggle = {},
             label = { Text("Password") },
@@ -153,6 +154,7 @@ fun IKInputTextPreview() {
         IKPasswordInputField(
             value = "Test12345",
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             isPasswordVisible = true,
             onPasswordToggle = {},
             label = { Text("Password") },
@@ -162,6 +164,7 @@ fun IKInputTextPreview() {
         IKPasswordInputField(
             value = "Test12345",
             onValueChange = {},
+            modifier = Modifier.fillMaxWidth(),
             isPasswordVisible = true,
             onPasswordToggle = {},
             label = { Text("Password") },
