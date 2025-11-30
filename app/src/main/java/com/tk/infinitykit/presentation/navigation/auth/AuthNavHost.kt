@@ -42,7 +42,7 @@ fun NavigationAuthentication(
             entry<AuthenticationScreen.LoginScreen> {
                 LoginScreenUi(
                     modifier = modifier,
-                    goToHome = { viewModel.navigate(AuthenticationScreen.LoginScreen) },
+                    goToHome = {  /* TODO:  Open HOME screen */ },
                     goToRegistration = { viewModel.navigate(AuthenticationScreen.RegisterScreen) }
                 )
             }
