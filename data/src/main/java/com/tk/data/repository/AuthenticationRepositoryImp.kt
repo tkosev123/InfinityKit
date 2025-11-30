@@ -4,8 +4,12 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.tk.domain.models.AuthenticationError
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.tk.domain.models.LoginError
 import com.tk.domain.models.LoginResult
+import com.tk.domain.models.RegisterError
+import com.tk.domain.models.RegisterResult
 import com.tk.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -23,22 +27,35 @@ class AuthenticationRepositoryImp @Inject constructor(
                 .suspendCoroutineResult()
             return LoginResult.Success
         }.getOrElse {
-            return LoginResult.Error(mapFirebaseError(it))
+            return LoginResult.Error(mapLoginErrors(it))
         }
     }
 
-    private fun mapFirebaseError(throwable: Throwable): AuthenticationError {
+    private fun mapLoginErrors(throwable: Throwable): LoginError {
         return when (throwable) {
-            is FirebaseAuthInvalidCredentialsException -> AuthenticationError.Remote.InvalidCredentials
-            is FirebaseAuthInvalidUserException -> AuthenticationError.Remote.UserNotFound
-            else -> AuthenticationError.Unknown(throwable.message)
+            is FirebaseAuthInvalidCredentialsException -> LoginError.Remote.InvalidCredentials
+            is FirebaseAuthInvalidUserException -> LoginError.Remote.UserNotFound
+            else -> LoginError.Unknown(throwable.message)
         }
     }
 
-    override suspend fun register(email: String, password: String) {
-        firebaseAuth
-            .createUserWithEmailAndPassword(email, password)
-            .suspendCoroutineResult()
+    override suspend fun register(email: String, password: String): RegisterResult {
+       runCatching {
+           firebaseAuth
+               .createUserWithEmailAndPassword(email, password)
+               .suspendCoroutineResult()
+           return RegisterResult.Success
+       }.getOrElse {
+           return RegisterResult.Error(mapRegisterErrors(it))
+       }
+    }
+
+    private fun mapRegisterErrors(it: Throwable): RegisterError {
+        when (it) {
+            is FirebaseAuthUserCollisionException -> return RegisterError.Remote.EmailAlreadyUsed
+            is FirebaseAuthWeakPasswordException -> return RegisterError.Remote.WeakPassword
+            else -> return RegisterError.Remote.Unknown(it.message)
+        }
     }
 
     override fun logout() {

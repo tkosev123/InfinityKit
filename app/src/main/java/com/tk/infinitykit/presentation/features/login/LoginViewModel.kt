@@ -1,6 +1,7 @@
 package com.tk.infinitykit.presentation.features.login
 
-import com.tk.domain.models.AuthenticationError
+import com.tk.domain.models.CredentialsValidationError
+import com.tk.domain.models.LoginError
 import com.tk.domain.models.LoginResult
 import com.tk.domain.usecase.LoginUseCase
 import com.tk.infinitykit.presentation.features.login.LoginEvent.*
@@ -17,27 +18,28 @@ class LoginViewModel @Inject constructor(
     override suspend fun handleIntent(intent: LoginIntent) =
         when (intent) {
             is LoginIntent.Login -> login(intent.email, intent.password)
-            is LoginIntent.EmailChanged -> updateState {
-                copy(
-                    email = intent.email,
-                    isEmailError = false,
-                    isPasswordError = false,
-                    emailErrorText = ""
-                )
-            }
+            is LoginIntent.EmailChanged ->
+                updateState {
+                    copy(
+                        email = intent.email,
+                        isEmailError = false,
+                        isPasswordError = false,
+                        emailErrorText = ""
+                    )
+                }
 
-            is LoginIntent.PasswordChanged -> updateState {
-                copy(
-                    password = intent.password,
-                    isEmailError = false,
-                    isPasswordError = false,
-                    passwordErrorText = ""
-                )
-            }
+            is LoginIntent.PasswordChanged ->
+                updateState {
+                    copy(
+                        password = intent.password,
+                        isEmailError = false,
+                        isPasswordError = false,
+                        passwordErrorText = ""
+                    )
+                }
 
-            LoginIntent.TogglePasswordVisibility -> {
+            LoginIntent.TogglePasswordVisibility ->
                 updateState { copy(isPasswordVisible = !isPasswordVisible) }
-            }
         }
 
     private suspend fun login(email: String, password: String) {
@@ -51,33 +53,20 @@ class LoginViewModel @Inject constructor(
             is LoginResult.Error -> {
                 updateState { copy(isLoading = false) }
                 val message = uiMapper.toUiModel(result.error)
-                handleError(result, message)
+                handleError(result.error, message)
             }
         }
     }
 
-    private fun handleError(result: LoginResult.Error, message: String) =
-        when (result.error) {
-            AuthenticationError.Validation.EmptyEmail,
-            AuthenticationError.Validation.InvalidEmail ->
-                updateState {
-                    copy(
-                        isEmailError = true,
-                        emailErrorText = message
-                    )
-                }
+    private fun handleError(error: LoginError, message: String) {
+        when (error) {
 
-            AuthenticationError.Validation.ShortPassword,
-            AuthenticationError.Remote.UserNotFound,
-            AuthenticationError.Validation.EmptyPassword ->
-                updateState {
-                    copy(
-                        isPasswordError = true,
-                        passwordErrorText = message
-                    )
-                }
+            /**
+             * NEW: Validation now wraps CredentialsValidationError
+             */
+            is LoginError.Validation -> handleValidationError(error.error, message)
 
-            AuthenticationError.Remote.InvalidCredentials -> {
+            LoginError.Remote.InvalidCredentials -> {
                 updateState {
                     copy(
                         isEmailError = true,
@@ -88,7 +77,57 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
-            AuthenticationError.Validation.EmptyEmailPassword ->
+            LoginError.Remote.UserNotFound -> {
+                updateState {
+                    copy(
+                        isPasswordError = true,
+                        passwordErrorText = message
+                    )
+                }
+            }
+
+            is LoginError.Unknown -> {
+                updateState {
+                    copy(
+                        isPasswordError = true,
+                        passwordErrorText = message
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleValidationError(
+        validationError: CredentialsValidationError,
+        message: String
+    ) {
+        when (validationError) {
+            CredentialsValidationError.EmptyEmail ->
+                updateState {
+                    copy(
+                        isEmailError = true,
+                        emailErrorText = message
+                    )
+                }
+
+            CredentialsValidationError.InvalidEmail ->
+                updateState {
+                    copy(
+                        isEmailError = true,
+                        emailErrorText = message
+                    )
+                }
+
+            CredentialsValidationError.EmptyPassword,
+            CredentialsValidationError.ShortPassword ->
+                updateState {
+                    copy(
+                        isPasswordError = true,
+                        passwordErrorText = message
+                    )
+                }
+
+            CredentialsValidationError.EmptyEmailPassword ->
                 updateState {
                     copy(
                         isEmailError = true,
@@ -97,7 +136,6 @@ class LoginViewModel @Inject constructor(
                         passwordErrorText = uiMapper.getPasswordEmptyFieldMessage()
                     )
                 }
-
-            is AuthenticationError.Unknown -> sendEvent(ShowError(message))
         }
+    }
 }

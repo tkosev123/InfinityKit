@@ -1,30 +1,23 @@
 package com.tk.domain.usecase
 
-import com.tk.domain.models.AuthenticationError
+import com.tk.domain.models.LoginError
 import com.tk.domain.models.LoginResult
 import com.tk.domain.repository.AuthenticationRepository
+import com.tk.domain.utils.CredentialsValidator
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
-    private val authenticationRepository: AuthenticationRepository
+    private val repository: AuthenticationRepository,
+    private val validator: CredentialsValidator
 ) {
     suspend operator fun invoke(email: String, password: String): LoginResult {
-        if (email.isBlank() && password.isBlank())
-            return LoginResult.Error(AuthenticationError.Validation.EmptyEmailPassword)
+        val validationError = validator.validate(email, password)
 
-        if (email.isBlank())
-            return LoginResult.Error(AuthenticationError.Validation.EmptyEmail)
+        if (validationError != null) {
+            return LoginResult.Error(LoginError.Validation(validationError))
+        }
 
-        if (password.isBlank())
-            return LoginResult.Error(AuthenticationError.Validation.EmptyPassword)
-
-        if (!EMAIL_REGEX.matches(email))
-            return LoginResult.Error(AuthenticationError.Validation.InvalidEmail)
-
-        if (password.length < 6)
-            return LoginResult.Error(AuthenticationError.Validation.ShortPassword)
-
-        return authenticationRepository.login(email, password)
+        return repository.login(email, password)
     }
 
     companion object {
