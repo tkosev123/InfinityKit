@@ -1,5 +1,6 @@
 package com.tk.infinitykit.presentation.features.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,20 +18,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation3.runtime.NavKey
 import com.tk.infinitykit.R
 import com.tk.infinitykit.presentation.components.GenericButton
 import com.tk.infinitykit.presentation.components.IKDialog
 import com.tk.infinitykit.presentation.components.IKPasswordInputField
 import com.tk.infinitykit.presentation.components.IKTextInputField
-import com.tk.infinitykit.presentation.navigation.authentication.AuthenticationScreen
 import com.tk.infinitykit.presentation.theme.TextSizes
 import com.tk.infinitykit.presentation.theme.spacing
 import com.tk.mvi.MviScreen
@@ -38,7 +39,8 @@ import com.tk.mvi.MviScreen
 fun LoginScreenUi(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
-    navBackStack: SnapshotStateList<NavKey>
+    goToHome: () -> Unit,
+    goToRegistration: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -46,7 +48,7 @@ fun LoginScreenUi(
     MviScreen(stateFlow = viewModel.state, eventFlow = viewModel.events, onEvent = { event ->
         when (event) {
             is LoginEvent.NavigateHome -> {
-                navBackStack.add(AuthenticationScreen.RegisterScreen)
+                goToHome()
             }
 
             is LoginEvent.ShowError -> {
@@ -70,6 +72,12 @@ fun LoginScreenUi(
                 modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
             )
 
+            Image(painterResource(
+                R.drawable.logo),
+                contentDescription = null,
+                modifier = Modifier.size(160.dp)
+            )
+
             IKTextInputField(
                 value = state.email,
                 onValueChange = { viewModel.onIntent(LoginIntent.EmailChanged(it)) },
@@ -78,7 +86,7 @@ fun LoginScreenUi(
                 errorText = state.emailErrorText,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.spacing.medium),
+                    .padding(vertical = MaterialTheme.spacing.medium),
             )
 
             IKPasswordInputField(
@@ -113,8 +121,9 @@ fun LoginScreenUi(
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.medium)
                     .clickable {
-                        navBackStack.add(AuthenticationScreen.RegisterScreen)
-                    })
+                        goToRegistration()
+                    }
+            )
         }
 
         if (errorMessage != null) {
@@ -129,4 +138,3 @@ fun LoginScreenUi(
         }
     })
 }
-

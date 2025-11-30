@@ -1,4 +1,4 @@
-package com.tk.infinitykit.presentation.navigation.authentication
+package com.tk.infinitykit.presentation.navigation.auth
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NavAuthenticationViewModel @Inject constructor(
+class AuthNavViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel(){
     private val _backStack = mutableStateListOf<NavKey>().apply {
@@ -26,7 +26,7 @@ class NavAuthenticationViewModel @Inject constructor(
 
     fun pop() {
         if (_backStack.isNotEmpty()) {
-            _backStack.removeLast()
+            _backStack.removeLastOrNull()
             save()
         }
     }
