@@ -60,10 +60,6 @@ class LoginViewModel @Inject constructor(
 
     private fun handleError(error: LoginError, message: String) {
         when (error) {
-
-            /**
-             * NEW: Validation now wraps CredentialsValidationError
-             */
             is LoginError.Validation -> handleValidationError(error.error, message)
 
             LoginError.Remote.InvalidCredentials -> {
