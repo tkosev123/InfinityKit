@@ -39,7 +39,7 @@ fun GenericButton(
             .clip(RoundedCornerShape(MaterialTheme.spacing.large))
             .border(
                 BorderStroke(MaterialTheme.spacing.tiny, LightColors.primary),
-                RoundedCornerShape(16.dp)
+                RoundedCornerShape(MaterialTheme.spacing.medium)
             )
             .height(ButtonDefaults.MinHeight)
             .fillMaxWidth()
@@ -49,8 +49,8 @@ fun GenericButton(
     ) {
         if (isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                strokeWidth = 4.dp,
+                modifier = Modifier.size(MaterialTheme.spacing.mediumLarge),
+                strokeWidth = MaterialTheme.spacing.extraSmall,
                 color = LightColors.background,
                 trackColor = LightColors.secondary
             )
@@ -70,7 +70,7 @@ fun Preview() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(MaterialTheme.spacing.medium),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
     ) {
         GenericButton(
