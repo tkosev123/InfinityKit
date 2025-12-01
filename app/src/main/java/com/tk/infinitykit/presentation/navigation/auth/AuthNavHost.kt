@@ -7,6 +7,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -18,11 +20,25 @@ import com.tk.infinitykit.presentation.features.login.LoginScreenUi
 import com.tk.infinitykit.presentation.features.register.RegisterScreenUi
 import kotlinx.serialization.Serializable
 
-sealed class AuthenticationScreen() : NavKey {
+@Serializable
+sealed class AuthenticationScreen(val id: AuthenticationNavIdentifiers) : NavKey {
     @Serializable
-    data object LoginScreen : AuthenticationScreen()
+    data object LoginScreen : AuthenticationScreen(AuthenticationNavIdentifiers.LOGIN)
+
     @Serializable
-    data object RegisterScreen : AuthenticationScreen()
+    data object RegisterScreen : AuthenticationScreen(AuthenticationNavIdentifiers.REGISTER)
+
+    companion object {
+        fun fromId(id: AuthenticationNavIdentifiers): AuthenticationScreen = when (id) {
+            AuthenticationNavIdentifiers.LOGIN -> LoginScreen
+            AuthenticationNavIdentifiers.REGISTER -> RegisterScreen
+        }
+    }
+
+    enum class AuthenticationNavIdentifiers {
+        LOGIN,
+        REGISTER
+    }
 }
 
 @Composable
@@ -30,10 +46,12 @@ fun AuthNavHost(
     modifier: Modifier = Modifier,
     viewModel: AuthNavViewModel = viewModel()
 ) {
-    val backStack = viewModel.backStack
+    val state by viewModel.state.collectAsState()
+    val backStack = state.backStack
+
     NavDisplay(
         backStack = backStack,
-        onBack = { viewModel.pop() },
+        onBack = { viewModel.onIntent(AuthNavIntent.Pop) },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
@@ -42,7 +60,9 @@ fun AuthNavHost(
             entry<AuthenticationScreen.LoginScreen> {
                 LoginScreenUi(
                     modifier = modifier,
-                    goToRegistration = { viewModel.navigate(AuthenticationScreen.RegisterScreen) }
+                    goToRegistration = {
+                        viewModel.onIntent(AuthNavIntent.Navigate(AuthenticationScreen.RegisterScreen))
+                    }
                 )
             }
             entry<AuthenticationScreen.RegisterScreen> {
