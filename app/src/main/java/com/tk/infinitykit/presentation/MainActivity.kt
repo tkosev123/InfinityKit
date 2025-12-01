@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.tk.infinitykit.presentation.navigation.auth.NavigationAuthentication
 import com.tk.infinitykit.presentation.theme.InfinityKitTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,11 +21,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             InfinityKitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavigationAuthentication(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    )
+                    AppRoot(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding))
                 }
             }
         }

@@ -45,10 +45,7 @@ class LoginViewModel @Inject constructor(
     private suspend fun login(email: String, password: String) {
         updateState { copy(isLoading = true, isEmailError = false, isPasswordError = false) }
         when (val result = loginUseCase(email, password)) {
-            LoginResult.Success -> {
-                updateState { copy(isLoading = false) }
-                sendEvent(NavigateHome)
-            }
+            LoginResult.Success -> updateState { copy(isLoading = false) }
 
             is LoginResult.Error -> {
                 updateState { copy(isLoading = false) }
