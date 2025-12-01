@@ -4,7 +4,6 @@ import com.tk.domain.models.CredentialsValidationError
 import com.tk.domain.models.LoginError
 import com.tk.domain.models.LoginResult
 import com.tk.domain.usecase.LoginUseCase
-import com.tk.infinitykit.presentation.features.login.LoginEvent.*
 import com.tk.mvi.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
