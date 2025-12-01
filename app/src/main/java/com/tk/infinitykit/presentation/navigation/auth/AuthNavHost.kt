@@ -26,7 +26,7 @@ sealed class AuthenticationScreen() : NavKey {
 }
 
 @Composable
-fun NavigationAuthentication(
+fun AuthNavHost(
     modifier: Modifier = Modifier,
     viewModel: AuthNavViewModel = viewModel()
 ) {
@@ -42,7 +42,6 @@ fun NavigationAuthentication(
             entry<AuthenticationScreen.LoginScreen> {
                 LoginScreenUi(
                     modifier = modifier,
-                    goToHome = {  /* TODO:  Open HOME screen */ },
                     goToRegistration = { viewModel.navigate(AuthenticationScreen.RegisterScreen) }
                 )
             }

@@ -16,5 +16,4 @@ class RegisterViewModel: BaseViewModel<RegisterState, RegisterEvent, RegisterInt
             RegisterIntent.TogglePasswordVisibility -> TODO()
         }
     }
-
 }

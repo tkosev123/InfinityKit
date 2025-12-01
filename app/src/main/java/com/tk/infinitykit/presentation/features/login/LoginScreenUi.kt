@@ -46,14 +46,12 @@ import kotlinx.coroutines.flow.StateFlow
 fun LoginScreenUi(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
-    goToHome: () -> Unit,
     goToRegistration: () -> Unit
 ) {
     LoginScreenContent(
         modifier = modifier,
         stateFlow = viewModel.state,
         events = viewModel.events,
-        goToHome = goToHome,
         goToRegistration = goToRegistration,
         onEmailChanged = { viewModel.onIntent(LoginIntent.EmailChanged(it)) },
         onPasswordChanged = { viewModel.onIntent(LoginIntent.PasswordChanged(it)) },
@@ -69,7 +67,6 @@ private fun LoginScreenContent(
     modifier: Modifier = Modifier,
     stateFlow: StateFlow<LoginState>,
     events: SharedFlow<LoginEvent>,
-    goToHome: () -> Unit,
     goToRegistration: () -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
@@ -81,7 +78,6 @@ private fun LoginScreenContent(
 
     MviScreen(stateFlow = stateFlow, eventFlow = events, onEvent = { event ->
         when (event) {
-            is LoginEvent.NavigateHome -> goToHome()
             is LoginEvent.ShowError -> errorMessage = event.message
         }
     }, content = {
@@ -175,7 +171,6 @@ fun LoginScreenUiPreview(
     LoginScreenContent(
         stateFlow = MutableStateFlow(state),
         events = MutableSharedFlow(),
-        goToHome = {},
         goToRegistration = {},
         onEmailChanged = {},
         onPasswordChanged = {},
