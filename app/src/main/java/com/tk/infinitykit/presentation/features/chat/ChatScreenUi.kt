@@ -1,4 +1,4 @@
-package com.tk.infinitykit.presentation.features
+package com.tk.infinitykit.presentation.features.chat
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

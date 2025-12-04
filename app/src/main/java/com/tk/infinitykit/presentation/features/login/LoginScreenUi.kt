@@ -99,7 +99,7 @@ private fun LoginScreenContent(
 
             Image(
                 painterResource(
-                    R.drawable.logo
+                    R.drawable.ic_infinity_logo
                 ),
                 contentDescription = null,
                 modifier = Modifier.size(160.dp)
@@ -140,8 +140,11 @@ private fun LoginScreenContent(
 
             Text(
                 text = stringResource(R.string.register_button),
-                fontSize = 16.sp,
+                fontSize = TextSizes.M,
                 color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.secondary
+                ),
                 modifier = Modifier
                     .padding(top = MaterialTheme.spacing.medium)
                     .clickable {

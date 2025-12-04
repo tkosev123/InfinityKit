@@ -24,7 +24,7 @@ fun BottomNavigationView(
 
     NavigationBar(
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.secondary
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         navItems.forEach { item ->
             val isSelected = item == selectedItem
@@ -35,14 +35,15 @@ fun BottomNavigationView(
                     Image(
                         painter = painterResource(item.icon),
                         contentDescription = stringResource(item.title),
-                        colorFilter = if (isSelected) ColorFilter.tint(MaterialTheme.colorScheme.primary) else ColorFilter.tint(
-                            MaterialTheme.colorScheme.secondary
+                        colorFilter = ColorFilter.tint(
+                            if (isSelected) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent,
-                    selectedTextColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                    selectedTextColor = MaterialTheme.colorScheme.primary
                 ),
                 label = {
                     Text(
