@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import com.tk.infinitykit.presentation.features.ChatScreen
+import com.tk.infinitykit.presentation.features.chat.ChatScreen
 import com.tk.infinitykit.presentation.features.dashboard.DashboardScreen
 import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.BottomNavigationView
 import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.ChatNavItem

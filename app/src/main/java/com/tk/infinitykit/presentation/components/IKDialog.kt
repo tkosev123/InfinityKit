@@ -82,7 +82,9 @@ fun IKDialog(
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        buttonText, color = Color.Blue, fontSize = TextSizes.M,
+                        buttonText,
+                        color = Color.Blue,
+                        fontSize = TextSizes.M,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
