@@ -1,14 +1,111 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.tk.infinitykit.presentation.navigation.inapp
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import com.tk.infinitykit.presentation.features.ChatScreen
+import com.tk.infinitykit.presentation.features.dashboard.DashboardScreen
+import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.BottomNavigationView
+import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.ChatNavItem
+import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.DashboardNavItem
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class AppDestination : NavKey {
+    @Serializable
+    data object Dashboard : AppDestination()
+
+    @Serializable
+    data object Chat : AppDestination()
+
+    @Serializable
+    data object Screen1 : AppDestination()
+}
 
 @Composable
-fun MainAppNavHost(modifier: Modifier) {
+fun MainAppNavHost(viewModel: MainAppViewModel = viewModel()) {
+    val state by viewModel.state.collectAsState()
+    val selectedItem = state.currentTab
+    val backStack = state.combinedBackStack
 
-    Scaffold(modifier = modifier) { contentPadding ->
-        Text("Hi")
+    Scaffold(bottomBar = {
+        BottomNavigationView(
+            modifier = Modifier,
+            selectedItem = selectedItem,
+            onItemClick = { item ->
+                viewModel.onIntent(MainAppIntent.SwitchRoot(item))
+            })
+    }) { innerPadding ->
+        val screenModifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+
+        NavDisplay(
+            backStack = backStack.toList(),
+            onBack = { viewModel.onIntent(MainAppIntent.Pop) },
+            entryProvider = entryProvider {
+                entry<AppDestination.Dashboard> {
+                    DashboardScreen(
+                        screenModifier,
+                        goToNextScreen = {
+                            viewModel.onIntent(MainAppIntent.Push(DashboardNavItem,AppDestination.Screen1))
+                        }
+                    )
+                }
+                entry<AppDestination.Chat> {
+                    ChatScreen(
+                        screenModifier,
+                        goToNextScreen = {
+                            viewModel.onIntent(MainAppIntent.Push(ChatNavItem, AppDestination.Screen1))
+                        })
+                }
+
+                entry<AppDestination.Screen1> {
+                    Screen1(
+                        screenModifier,
+                        goToNextScreen = { }
+                    )
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun Screen1(
+    modifier: Modifier = Modifier,
+    goToNextScreen: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier,
+    ) {
+        TopAppBar(
+            title = {
+                Text("Screen2")
+            },
+            windowInsets = WindowInsets(0),
+        )
+        Spacer(Modifier.weight(8f))
+        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(8f))
     }
 }
