@@ -1,9 +1,13 @@
-package com.tk.infinitykit.presentation
+package com.tk.infinitykit.presentation.root
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tk.infinitykit.presentation.navigation.auth.AuthNavHost
@@ -20,9 +24,12 @@ fun AppRoot(
         viewModel.onIntent(AppRootIntent.ObserveAuthState)
     }
 
-    if(state.isLoggedIn) {
-        MainAppNavHost(modifier = modifier)
-    } else {
-        AuthNavHost(modifier = modifier)
+    when {
+        state.isLoading -> Box(modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        state.isLoggedIn -> MainAppNavHost()
+        else -> AuthNavHost(modifier)
     }
 }
