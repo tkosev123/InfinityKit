@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 // === Glowing Horizon Palette ===
 val YellowOrange = Color(0xFFFFB343)   // Primary warm yellow-orange
-val AquaBlue = Color(0xFF42EAFF)       // Secondary aqua
+val AquaBlue = Color(0xA88C702F)       // Secondary aqua
 val RoyalBlue = Color(0xFF4272FF)      // Tertiary accent
 val VibrantOrange = Color(0xFFFF7E42)  // Complement / strong accent
 

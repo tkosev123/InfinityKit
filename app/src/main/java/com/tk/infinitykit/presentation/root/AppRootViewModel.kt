@@ -1,4 +1,4 @@
-package com.tk.infinitykit.presentation
+package com.tk.infinitykit.presentation.root
 
 import com.tk.domain.usecase.ObserveAuthStateUseCase
 import com.tk.mvi.BaseViewModel
@@ -18,7 +18,7 @@ class AppRootViewModel @Inject constructor(
     private suspend fun observeAuthState() {
         observeAuthStateUseCase()
             .collect { loggedIn ->
-                updateState { copy(isLoggedIn = loggedIn) }
+                updateState { copy(isLoggedIn = loggedIn, isLoading = false) }
             }
     }
 }

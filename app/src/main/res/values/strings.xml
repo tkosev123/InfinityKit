@@ -16,4 +16,6 @@
     <string name="login_error_incorrect_field">Incorrect</string>
     <string name="generic_action_ok">OK</string>
     <string name="generic_error_title">Whoops!</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_chat">Chat</string>
 </resources>
