@@ -14,6 +14,12 @@
     <string name="login_error_password_below_required_length">Password must be at least 6 characters</string>
     <string name="login_error_empty_email_password">Email and password cannot be empty</string>
     <string name="login_error_incorrect_field">Incorrect</string>
+    <string name="register_error_weak_password">Password is too weak</string>
+    <string name="register_error_email_already_used">Email is already registered</string>
+    <string name="register_first_name">First Name</string>
+    <string name="register_last_name">Last Name</string>
+    <string name="register_welcome">Create Account</string>
+    <string name="register_button_text">Register</string>
     <string name="generic_action_ok">OK</string>
     <string name="generic_error_title">Whoops!</string>
     <string name="tab_home">Home</string>

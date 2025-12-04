@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tk.infinitykit.R
 import com.tk.infinitykit.presentation.components.GenericButton
@@ -102,7 +101,7 @@ private fun LoginScreenContent(
                     R.drawable.ic_infinity_logo
                 ),
                 contentDescription = null,
-                modifier = Modifier.size(160.dp)
+                modifier = Modifier.size(120.dp)
             )
 
             IKTextInputField(
@@ -124,7 +123,7 @@ private fun LoginScreenContent(
                 errorText = state.passwordErrorText,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.spacing.mediumLarge),
+                    .padding(bottom = MaterialTheme.spacing.medium),
                 isPasswordVisible = state.isPasswordVisible,
                 onPasswordToggle = { onPasswordToggle() }
             )

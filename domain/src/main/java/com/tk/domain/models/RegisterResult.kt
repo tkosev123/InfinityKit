@@ -1,7 +1,7 @@
 package com.tk.domain.models
 
 sealed interface RegisterResult {
-    object Success : RegisterResult
+    data class Success(val uid: String) : RegisterResult
     data class Error(val error: RegisterError) : RegisterResult
 }
 
@@ -12,6 +12,6 @@ sealed interface RegisterError {
         object InvalidCredentials : Remote
         object WeakPassword : Remote
         object EmailAlreadyUsed : Remote
-        data class Unknown(val message: String? = null) : RegisterError
+        data class Unknown(val message: String? = null) : Remote
     }
 }
