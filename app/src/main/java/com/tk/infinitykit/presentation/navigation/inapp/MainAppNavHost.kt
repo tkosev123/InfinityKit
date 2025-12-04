@@ -2,10 +2,12 @@
 
 package com.tk.infinitykit.presentation.navigation.inapp
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -16,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -44,47 +47,62 @@ fun MainAppNavHost(viewModel: MainAppViewModel = viewModel()) {
     val state by viewModel.state.collectAsState()
     val selectedItem = state.currentTab
     val backStack = state.combinedBackStack
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(bottomBar = {
+            BottomNavigationView(
+                modifier = Modifier,
+                selectedItem = selectedItem,
+                onItemClick = { item ->
+                    viewModel.onIntent(MainAppIntent.SwitchRoot(item))
+                })
+        }) { innerPadding ->
+            NavDisplay(
+                backStack = backStack.toList(),
+                onBack = { viewModel.onIntent(MainAppIntent.Pop) },
+                entryProvider = entryProvider {
+                    entry<AppDestination.Dashboard> {
+                        DashboardScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                            goToNextScreen = {
+                                viewModel.onIntent(
+                                    MainAppIntent.Push(
+                                        DashboardNavItem,
+                                        AppDestination.Screen1
+                                    )
+                                )
+                            }
+                        )
+                    }
 
-    Scaffold(bottomBar = {
-        BottomNavigationView(
-            modifier = Modifier,
-            selectedItem = selectedItem,
-            onItemClick = { item ->
-                viewModel.onIntent(MainAppIntent.SwitchRoot(item))
-            })
-    }) { innerPadding ->
-        val screenModifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
+                    entry<AppDestination.Chat> {
+                        ChatScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                            goToNextScreen = {
+                                viewModel.onIntent(
+                                    MainAppIntent.Push(
+                                        ChatNavItem,
+                                        AppDestination.Screen1
+                                    )
+                                )
+                            }
+                        )
+                    }
 
-        NavDisplay(
-            backStack = backStack.toList(),
-            onBack = { viewModel.onIntent(MainAppIntent.Pop) },
-            entryProvider = entryProvider {
-                entry<AppDestination.Dashboard> {
-                    DashboardScreen(
-                        screenModifier,
-                        goToNextScreen = {
-                            viewModel.onIntent(MainAppIntent.Push(DashboardNavItem,AppDestination.Screen1))
-                        }
-                    )
+                    entry<AppDestination.Screen1> {
+                        Screen1(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                            goToNextScreen = {}
+                        )
+                    }
                 }
-                entry<AppDestination.Chat> {
-                    ChatScreen(
-                        screenModifier,
-                        goToNextScreen = {
-                            viewModel.onIntent(MainAppIntent.Push(ChatNavItem, AppDestination.Screen1))
-                        })
-                }
-
-                entry<AppDestination.Screen1> {
-                    Screen1(
-                        screenModifier,
-                        goToNextScreen = { }
-                    )
-                }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -107,4 +125,12 @@ fun Screen1(
         Spacer(Modifier.weight(1f))
         Spacer(Modifier.weight(8f))
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Preview() {
+   // MainAppNavHost(
+   //
+   // )
 }

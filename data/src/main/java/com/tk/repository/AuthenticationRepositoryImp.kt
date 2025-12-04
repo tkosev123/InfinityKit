@@ -2,6 +2,7 @@ package com.tk.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.tk.domain.models.LoginResult
+import com.tk.domain.models.RegisterError
 import com.tk.domain.models.RegisterResult
 import com.tk.domain.repository.AuthenticationRepository
 import com.tk.mapper.AuthenticationMapper
@@ -29,12 +30,16 @@ class AuthenticationRepositoryImp @Inject constructor(
 
     override suspend fun register(email: String, password: String): RegisterResult =
         runCatching {
-            firebaseAuth
+            val authResult = firebaseAuth
                 .createUserWithEmailAndPassword(email, password)
                 .suspendCoroutineResult()
-            return RegisterResult.Success
+            val uid = authResult?.user?.uid
+            if (uid.isNullOrEmpty()) {
+                return RegisterResult.Error(RegisterError.Remote.Unknown("User UID is null or empty"))
+            }
+            RegisterResult.Success(uid)
         }.getOrElse {
-            return RegisterResult.Error(mapper.mapRegisterErrors(it))
+            RegisterResult.Error(mapper.mapRegisterErrors(it))
         }
 
     override suspend fun observeLoggedInUser(): Flow<Boolean> = callbackFlow {
