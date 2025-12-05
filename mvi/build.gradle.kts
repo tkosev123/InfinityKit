@@ -7,11 +7,9 @@ plugins {
 
 android {
     namespace = "com.tk.mvi"
-
 }
 
 dependencies {
-    //androidx-lifecycle-viewmodel-ktx
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.junit)
 }

@@ -8,4 +8,7 @@ android {
     namespace = "com.tk.domain"
 }
 
-dependencies { }
+dependencies {
+    /* -----------Testing ----------- */
+    implementation(libs.androidx.junit)
+}

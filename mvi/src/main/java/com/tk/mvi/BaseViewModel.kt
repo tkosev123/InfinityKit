@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
-    // -------------------------------------------------------
-    //  UI STATE (Cold StateFlow — persists, observable, replay = 1)
-    // -------------------------------------------------------
     private  val _state = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
@@ -19,9 +16,6 @@ abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
         _state.value = _state.value.reducer()
     }
 
-    // -------------------------------------------------------
-    //  UI EVENTS (Hot SharedFlow — no replay)
-    // -------------------------------------------------------
     private val _events = MutableSharedFlow<E>()
     val events = _events.asSharedFlow()
 
@@ -31,9 +25,6 @@ abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
         }
     }
 
-    // -------------------------------------------------------
-    //  INTENTS (User actions handled in one place)
-    // -------------------------------------------------------
     fun onIntent(intent: I) {
         viewModelScope.launch {
             handleIntent(intent)

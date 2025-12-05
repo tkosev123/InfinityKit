@@ -5,6 +5,7 @@ plugins {
     id("com.tk.buildlogic.google.services")
     id("com.tk.buildlogic.android.library.compose")
     id("com.tk.buildlogic.kotlin.serialization")
+    id("com.tk.buildlogic.jacoco.report")
     alias(libs.plugins.compose.compiler)
 }
 
