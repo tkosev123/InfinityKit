@@ -42,6 +42,11 @@ gradlePlugin {
             id = "com.tk.buildlogic.google.services"
             implementationClass = "convention.GoogleServicesConventionPlugin"
         }
+
+        register("JacocoReport") {
+            id = "com.tk.buildlogic.jacoco.report"
+            implementationClass = "convention.JacocoAndroidConventionPlugin"
+        }
     }
 }
 
