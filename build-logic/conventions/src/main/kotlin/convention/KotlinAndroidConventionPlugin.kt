@@ -10,13 +10,10 @@ import support.AppConfig
 class KotlinAndroidConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
 
-        // Kotlin + Android
         pluginManager.apply("org.jetbrains.kotlin.android")
 
-        // Kapt (if module needs annotation processing)
         pluginManager.apply("org.jetbrains.kotlin.kapt")
 
-        // Android/Kotlin shared settings
         extensions.configure<BaseExtension> {
             compileSdkVersion(AppConfig.compileSdk)
 
@@ -30,7 +27,6 @@ class KotlinAndroidConventionPlugin : Plugin<Project> {
             }
         }
 
-        // Kotlin compiler settings
         extensions.configure<KotlinAndroidProjectExtension> {
             compilerOptions {
                 jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)

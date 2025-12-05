@@ -14,4 +14,6 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
 
+    /* -----------Testing ----------- */
+    implementation(libs.androidx.junit)
 }
