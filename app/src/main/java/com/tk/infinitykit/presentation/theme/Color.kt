@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 // === Base Brand Colors ===
 val Primary = Color(0xFF0C0058)    // deep indigo
+val DarkPrimary = Color(0xFF3E2ACD)
+
 val Secondary = Color(0xFFFF7322)  // coral red
 
 // Additional matched colors
@@ -54,7 +56,7 @@ val md_theme_light_inversePrimary = Primary
 // ---------------------------
 // Dark Theme Colors
 // ---------------------------
-val md_theme_dark_primary = Primary
+val md_theme_dark_primary = DarkPrimary
 val md_theme_dark_onPrimary = SoftLilac
 val md_theme_dark_primaryContainer = Color(0xFF302A73)
 val md_theme_dark_onPrimaryContainer = Primary
