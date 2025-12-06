@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.tk.infinitykit.presentation.theme.LightColors
 import com.tk.infinitykit.presentation.theme.spacing
 
 @Composable
@@ -38,12 +35,15 @@ fun GenericButton(
         modifier = modifier
             .clip(RoundedCornerShape(MaterialTheme.spacing.large))
             .border(
-                BorderStroke(MaterialTheme.spacing.tiny, LightColors.primary),
-                RoundedCornerShape(MaterialTheme.spacing.medium)
+                BorderStroke(
+                    width = MaterialTheme.spacing.tiny,
+                    color = MaterialTheme.colorScheme.primary
+                ),
+                shape = RoundedCornerShape(size = MaterialTheme.spacing.medium)
             )
             .height(ButtonDefaults.MinHeight)
             .fillMaxWidth()
-            .background(LightColors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -51,8 +51,8 @@ fun GenericButton(
             CircularProgressIndicator(
                 modifier = Modifier.size(MaterialTheme.spacing.mediumLarge),
                 strokeWidth = MaterialTheme.spacing.extraSmall,
-                color = LightColors.background,
-                trackColor = LightColors.secondary
+                color = MaterialTheme.colorScheme.background,
+                trackColor = MaterialTheme.colorScheme.secondary
             )
         } else {
             Text(
