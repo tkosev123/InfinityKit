@@ -42,16 +42,16 @@ sealed class AuthenticationScreen(val id: AuthenticationNavIdentifiers) : NavKey
 }
 
 @Composable
-fun AuthNavHost(
+fun AuthHost(
     modifier: Modifier = Modifier,
-    viewModel: AuthNavViewModel = viewModel()
+    viewModel: AuthViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val backStack = state.backStack
 
     NavDisplay(
         backStack = backStack,
-        onBack = { viewModel.onIntent(AuthNavIntent.Pop) },
+        onBack = { viewModel.onIntent(AuthIntent.Pop) },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
@@ -61,7 +61,7 @@ fun AuthNavHost(
                 LoginScreenUi(
                     modifier = modifier,
                     goToRegistration = {
-                        viewModel.onIntent(AuthNavIntent.Navigate(AuthenticationScreen.RegisterScreen))
+                        viewModel.onIntent(AuthIntent.Navigate(AuthenticationScreen.RegisterScreen))
                     }
                 )
             }

@@ -4,9 +4,10 @@ interface AppRootEvent
 
 sealed interface AppRootIntent {
     object ObserveAuthState: AppRootIntent
+    object Pop: AppRootIntent
 }
 
 data class AppRootState(
-    val isLoggedIn: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val backStack: List<Route> = listOf(Route.Auth)
 )

@@ -1,4 +1,4 @@
-package com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation
+package com.tk.infinitykit.presentation.components.bottomnavigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,7 +32,7 @@ fun BottomNavigationView(
 ) {
     val navItems = listOf(DashboardNavItem, ChatNavItem)
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
             .navigationBarsPadding()
@@ -42,7 +42,7 @@ fun BottomNavigationView(
 
     ) {
         NavigationBar(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ) {
             navItems.forEach { item ->
                 val isSelected = item == selectedItem
@@ -74,7 +74,7 @@ fun BottomNavigationView(
 
 @Preview(showBackground = true)
 @Composable
-fun Preview() {
+fun IKBottomNavigationViewPreview() {
     BottomNavigationView(
         modifier = Modifier,
         selectedItem = DashboardNavItem,

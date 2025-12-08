@@ -2,7 +2,6 @@ package com.tk.infinitykit.presentation.features.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,14 +45,12 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun RegisterScreenUi(
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = hiltViewModel(),
-    goToLogin: () -> Unit = {}
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     RegisterScreenContent(
         modifier = modifier,
         stateFlow = viewModel.state,
         events = viewModel.events,
-        goToLogin = goToLogin,
         onEmailChanged = { viewModel.onIntent(RegisterIntent.EmailChanged(it)) },
         onPasswordChanged = { viewModel.onIntent(RegisterIntent.PasswordChanged(it)) },
         onFirstNameChanged = { viewModel.onIntent(RegisterIntent.FirstNameChanged(it)) },
@@ -70,7 +67,6 @@ private fun RegisterScreenContent(
     modifier: Modifier = Modifier,
     stateFlow: StateFlow<RegisterState>,
     events: SharedFlow<RegisterEvent>,
-    goToLogin: () -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onFirstNameChanged: (String) -> Unit,
@@ -192,7 +188,6 @@ fun RegisterScreenUiPreview(
     RegisterScreenContent(
         stateFlow = MutableStateFlow(state),
         events = MutableSharedFlow(),
-        goToLogin = {},
         onEmailChanged = {},
         onPasswordChanged = {},
         onFirstNameChanged = {},

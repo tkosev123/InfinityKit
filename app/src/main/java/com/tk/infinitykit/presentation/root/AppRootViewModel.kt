@@ -10,15 +10,28 @@ class AppRootViewModel @Inject constructor(
     private val observeAuthStateUseCase: ObserveAuthStateUseCase
 ) : BaseViewModel<AppRootState, AppRootEvent, AppRootIntent>(initialState = AppRootState()) {
 
-    override suspend fun handleIntent(intent: AppRootIntent) =
+    override suspend fun handleIntent(intent: AppRootIntent) {
         when (intent) {
             AppRootIntent.ObserveAuthState -> observeAuthState()
+            AppRootIntent.Pop -> state.value.backStack.dropLast(0)
         }
+    }
 
     private suspend fun observeAuthState() {
         observeAuthStateUseCase()
             .collect { loggedIn ->
-                updateState { copy(isLoggedIn = loggedIn, isLoading = false) }
+                val newBackStack = if (loggedIn) {
+                    listOf(Route.Main)
+                } else {
+                    listOf(Route.Auth)
+                }
+
+                updateState {
+                    copy(
+                        isLoading = false,
+                        backStack = newBackStack
+                    )
+                }
             }
     }
 }
