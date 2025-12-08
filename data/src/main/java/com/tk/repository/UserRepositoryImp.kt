@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UserRepositoryImp @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase
 ) : UserRepository {
-    
+
     override suspend fun createUserInDatabase(
         uid: String,
         email: String,
@@ -21,7 +21,9 @@ class UserRepositoryImp @Inject constructor(
             LAST_NAME to lastName
         )
 
-        val databaseReference = firebaseDatabase.getReference(USERS_PATH).child(uid)
+        val databaseReference = firebaseDatabase
+            .getReference(USERS_PATH)
+            .child(uid)
         databaseReference.setValue(userMap).suspendCoroutineResult()
     }
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,19 +30,21 @@ import com.tk.infinitykit.presentation.theme.TextSizes
 import com.tk.infinitykit.presentation.theme.spacing
 
 @Composable
-fun IKChatListItem(
+fun IKConversationItem(
     modifier: Modifier = Modifier,
     avatarRes: Int,
     name: String,
     message: String,
     time: String,
-    unreadCount: Int = 0
+    unreadCount: Int = 0,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(84.dp)
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -112,19 +115,19 @@ fun IKChatListItem(
 
 @Preview(showBackground = true)
 @Composable
-fun IKChatListItemPreview() {
+fun IKConversationItemPreview() {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
     ) {
-
-        IKChatListItem(
+        IKConversationItem(
             avatarRes = R.drawable.logo,
             name = "Bryan",
             message = "Looks great",
             time = "4:30 PM",
-            unreadCount = 2
+            unreadCount = 2,
+            onClick = { }
         )
     }
 }

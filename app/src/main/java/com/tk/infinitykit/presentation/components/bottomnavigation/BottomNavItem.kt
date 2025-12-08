@@ -1,4 +1,4 @@
-package com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation
+package com.tk.infinitykit.presentation.components.bottomnavigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
