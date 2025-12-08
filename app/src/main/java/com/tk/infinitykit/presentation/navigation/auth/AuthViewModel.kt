@@ -7,21 +7,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthNavViewModel @Inject constructor(
+class AuthViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
-) : BaseViewModel<AuthNavState, AuthNavEvent, AuthNavIntent>(
-    AuthNavState(backStack = mutableStateListOf(AuthenticationScreen.LoginScreen))
+) : BaseViewModel<AuthState, AuthEvent, AuthIntent>(
+    AuthState(backStack = mutableStateListOf(AuthenticationScreen.LoginScreen))
 ) {
 
     init {
         restoreBackStack()
     }
 
-    override suspend fun handleIntent(intent: AuthNavIntent) {
+    override suspend fun handleIntent(intent: AuthIntent) {
         when (intent) {
-            is AuthNavIntent.Navigate -> navigate(intent.key)
+            is AuthIntent.Navigate -> navigate(intent.key)
 
-            AuthNavIntent.Pop -> pop()
+            AuthIntent.Pop -> pop()
         }
     }
 

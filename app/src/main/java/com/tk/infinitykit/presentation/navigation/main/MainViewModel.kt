@@ -1,28 +1,29 @@
-package com.tk.infinitykit.presentation.navigation.inapp
+package com.tk.infinitykit.presentation.navigation.main
 
 import androidx.compose.runtime.mutableStateListOf
-import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.BottomNavItem
-import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.ChatNavItem
-import com.tk.infinitykit.presentation.navigation.inapp.bottomnavigation.DashboardNavItem
+import com.tk.infinitykit.presentation.components.bottomnavigation.BottomNavItem
+import com.tk.infinitykit.presentation.components.bottomnavigation.ChatNavItem
+import com.tk.infinitykit.presentation.components.bottomnavigation.DashboardNavItem
 import com.tk.mvi.BaseViewModel
 
-class MainAppViewModel :
-    BaseViewModel<MainAppState<AppDestination, BottomNavItem>, MainAppEvent, MainAppIntent>(
-        MainAppState(
+class MainViewModel :
+    BaseViewModel<MainState<AppRoute, BottomNavItem>, MainEvent, MainIntent>(
+        MainState(
             tabBackStacks = hashMapOf(
-                DashboardNavItem to mutableStateListOf(AppDestination.Dashboard),
-                ChatNavItem to mutableStateListOf(AppDestination.Chat)
+                DashboardNavItem to mutableStateListOf(AppRoute.Dashboard),
+                ChatNavItem to mutableStateListOf(AppRoute.ConversationListPreview)
             ),
             currentTab = DashboardNavItem,
             rootTab = DashboardNavItem,
-            combinedBackStack = mutableStateListOf(AppDestination.Dashboard)
+            combinedBackStack = mutableStateListOf(AppRoute.Dashboard)
         )
     ) {
-    override suspend fun handleIntent(intent: MainAppIntent) {
+
+    override suspend fun handleIntent(intent: MainIntent) {
         when (intent) {
-            is MainAppIntent.Push -> push(intent.root, intent.destination)
-            is MainAppIntent.Pop -> pop()
-            is MainAppIntent.SwitchRoot -> switchRoot(intent.root)
+            is MainIntent.Push -> push(intent.root, intent.route)
+            is MainIntent.Pop -> pop()
+            is MainIntent.SwitchRoot -> switchRoot(intent.root)
         }
     }
 
@@ -51,8 +52,8 @@ class MainAppViewModel :
         updateCombinedBackStack()
     }
 
-    private fun push(root: BottomNavItem, destination: AppDestination) {
-        state.value.tabBackStacks.getOrPut(root) { mutableStateListOf() }.add(destination)
+    private fun push(root: BottomNavItem, route: AppRoute) {
+        state.value.tabBackStacks.getOrPut(root) { mutableStateListOf() }.add(route)
         updateCombinedBackStack()
     }
 
