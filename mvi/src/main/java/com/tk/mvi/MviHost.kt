@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun <STATE, EVENT> MviScreen(
+fun <STATE, EVENT> MviHost(
     stateFlow: StateFlow<STATE>,
     eventFlow: SharedFlow<EVENT>,
     onEvent: (EVENT) -> Unit,

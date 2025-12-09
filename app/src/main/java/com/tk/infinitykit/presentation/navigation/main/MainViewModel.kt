@@ -4,10 +4,10 @@ import androidx.compose.runtime.mutableStateListOf
 import com.tk.infinitykit.presentation.components.bottomnavigation.BottomNavItem
 import com.tk.infinitykit.presentation.components.bottomnavigation.ChatNavItem
 import com.tk.infinitykit.presentation.components.bottomnavigation.DashboardNavItem
-import com.tk.mvi.BaseViewModel
+import com.tk.mvi.MviViewModel
 
 class MainViewModel :
-    BaseViewModel<MainState<AppRoute, BottomNavItem>, MainEvent, MainIntent>(
+    MviViewModel<MainState<AppRoute, BottomNavItem>, MainEvent, MainIntent>(
         MainState(
             tabBackStacks = hashMapOf(
                 DashboardNavItem to mutableStateListOf(AppRoute.Dashboard),

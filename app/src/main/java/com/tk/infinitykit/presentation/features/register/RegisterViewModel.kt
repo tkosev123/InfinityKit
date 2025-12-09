@@ -4,7 +4,7 @@ import com.tk.domain.models.CredentialsValidationError
 import com.tk.domain.models.RegisterError
 import com.tk.domain.models.RegisterResult
 import com.tk.domain.usecase.RegisterUseCase
-import com.tk.mvi.BaseViewModel
+import com.tk.mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val uiMapper: RegisterErrorUiMapper
-) : BaseViewModel<RegisterState, RegisterEvent, RegisterIntent>(RegisterState()) {
+) : MviViewModel<RegisterState, RegisterEvent, RegisterIntent>(RegisterState()) {
 
     override suspend fun handleIntent(intent: RegisterIntent) =
         when (intent) {
