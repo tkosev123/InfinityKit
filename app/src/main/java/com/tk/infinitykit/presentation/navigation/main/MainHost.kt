@@ -2,25 +2,18 @@
 
 package com.tk.infinitykit.presentation.navigation.main
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -30,6 +23,7 @@ import com.tk.infinitykit.presentation.components.bottomnavigation.DashboardNavI
 import com.tk.infinitykit.presentation.features.chatlist.ConversationListScreenUi
 import com.tk.infinitykit.presentation.features.chatroom.ChatRoomScreenUi
 import com.tk.infinitykit.presentation.features.dashboard.DashboardScreen
+import com.tk.mvi.MviScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -48,80 +42,87 @@ sealed class AppRoute : NavKey {
 }
 
 @Composable
-fun MainHost(viewModel: MainViewModel = viewModel()) {
-    val state by viewModel.state.collectAsState()
-    val selectedItem = state.currentTab
-    val backStack = state.combinedBackStack
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            bottomBar = {
-                BottomNavigationView(
-                    modifier = Modifier,
-                    selectedItem = selectedItem,
-                    onItemClick = { item ->
-                        viewModel.onIntent(MainIntent.SwitchRoot(item))
-                    })
-            },
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text("titleaa")
-                    },
-                    actions = {
-                        Text("actions")
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors().copy(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+fun MainHost(
+    viewModel: MainViewModel = hiltViewModel()
+) {
+    MviScreen(
+        stateFlow = viewModel.state,
+        eventFlow = viewModel.events,
+        onEvent = { },
+        content = { state ->
+            val selectedTab = state.currentTab
+            val backStack = state.combinedBackStack
+
+            Scaffold(
+                bottomBar = {
+                    BottomNavigationView(
+                        selectedItem = selectedTab,
+                        onItemClick = { item ->
+                            viewModel.onIntent(MainIntent.SwitchRoot(item))
+                        })
+                },
+
+                content = { innerPadding ->
+                    MainNavGraph(
+                        backStack = backStack,
+                        innerPadding = innerPadding,
+                        viewModel = viewModel
                     )
-                )
-            })
-        { innerPadding ->
-            NavDisplay(
-                backStack = backStack.toList(),
-                onBack = { viewModel.onIntent(MainIntent.Pop) },
-                entryProvider = entryProvider {
-                    entry<AppRoute.Dashboard> {
-                        DashboardScreen(
-                            modifier = Modifier
-                                .padding(innerPadding),
-                            goToNextScreen = {
-                                viewModel.onIntent(
-                                    MainIntent.Push(
-                                        DashboardNavItem,
-                                        AppRoute.Screen1
-                                    )
-                                )
-                            }
-                        )
-                    }
-
-                    entry<AppRoute.ConversationListPreview> {
-                        ConversationListScreenUi(
-                            modifier = Modifier
-                                .padding(innerPadding),
-                            goToChatRoom = {
-                                viewModel.onIntent(
-                                    MainIntent.Push(
-                                        ChatNavItem,
-                                        AppRoute.ChatRoom
-                                    )
-                                )
-                            }
-                        )
-                    }
-
-                    entry<AppRoute.Screen1> {
-                        Screen1()
-                    }
-
-                    entry<AppRoute.ChatRoom> {
-                        ChatRoomScreenUi(modifier = Modifier.padding(innerPadding))
-                    }
-                }
-            )
-        }
-    }
+                })
+        })
 }
+
+@Composable
+fun MainNavGraph(
+    backStack: List<NavKey>,
+    innerPadding: PaddingValues,
+    viewModel: MainViewModel
+) {
+    NavDisplay(
+        backStack = backStack,
+        onBack = { viewModel.onIntent(MainIntent.Pop) },
+        entryProvider = entryProvider {
+            entry<AppRoute.Dashboard> {
+                DashboardScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    goToNextScreen = {
+                        viewModel.onIntent(
+                            MainIntent.Push(
+                                DashboardNavItem,
+                                AppRoute.Screen1
+                            )
+                        )
+                    }
+                )
+            }
+
+            entry<AppRoute.ConversationListPreview> {
+                ConversationListScreenUi(
+                    modifier = Modifier.padding(innerPadding),
+                    goToChatRoom = {
+                        viewModel.onIntent(
+                            MainIntent.Push(
+                                ChatNavItem,
+                                AppRoute.ChatRoom
+                            )
+                        )
+                    }
+                )
+            }
+
+            entry<AppRoute.Screen1> {
+                Screen1()
+            }
+
+            entry<AppRoute.ChatRoom> {
+                ChatRoomScreenUi(
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
+        }
+    )
+}
+
 
 @Composable
 fun Screen1(modifier: Modifier = Modifier) {
@@ -129,13 +130,8 @@ fun Screen1(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize(),
     ) {
-        TopAppBar(
-            title = {
-                Text("Screen2")
-            },
-            windowInsets = WindowInsets(0),
-        )
         Spacer(Modifier.weight(8f))
+        Text("Screen2")
         Spacer(Modifier.weight(1f))
         Spacer(Modifier.weight(8f))
     }

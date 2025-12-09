@@ -26,7 +26,7 @@ import com.tk.infinitykit.presentation.theme.spacing
 
 @Composable
 fun BottomNavigationView(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     selectedItem: BottomNavItem,
     onItemClick: (BottomNavItem) -> Unit
 ) {

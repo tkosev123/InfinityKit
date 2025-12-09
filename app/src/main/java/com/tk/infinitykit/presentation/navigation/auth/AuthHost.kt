@@ -7,10 +7,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -18,6 +16,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.tk.infinitykit.presentation.features.login.LoginScreenUi
 import com.tk.infinitykit.presentation.features.register.RegisterScreenUi
+import com.tk.mvi.MviScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -44,12 +43,30 @@ sealed class AuthenticationScreen(val id: AuthenticationNavIdentifiers) : NavKey
 @Composable
 fun AuthHost(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel = viewModel()
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
-    val backStack = state.backStack
+    MviScreen(
+        stateFlow = viewModel.state,
+        eventFlow = viewModel.events,
+        onEvent = { },
+        content = { state ->
+            val backStack = state.backStack
+            AuthNavGraph(
+                modifier = modifier,
+                backStack = backStack,
+                viewModel = viewModel
+            )
+        })
+}
 
+@Composable
+fun AuthNavGraph(
+    modifier: Modifier = Modifier,
+    viewModel: AuthViewModel,
+    backStack: List<AuthenticationScreen>,
+) {
     NavDisplay(
+        modifier = modifier,
         backStack = backStack,
         onBack = { viewModel.onIntent(AuthIntent.Pop) },
         entryDecorators = listOf(
@@ -59,14 +76,13 @@ fun AuthHost(
         entryProvider = entryProvider {
             entry<AuthenticationScreen.LoginScreen> {
                 LoginScreenUi(
-                    modifier = modifier,
                     goToRegistration = {
                         viewModel.onIntent(AuthIntent.Navigate(AuthenticationScreen.RegisterScreen))
                     }
                 )
             }
             entry<AuthenticationScreen.RegisterScreen> {
-                RegisterScreenUi(modifier = modifier)
+                RegisterScreenUi()
             }
         },
         transitionSpec = {

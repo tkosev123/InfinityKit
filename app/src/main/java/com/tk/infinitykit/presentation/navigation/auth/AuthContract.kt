@@ -1,8 +1,5 @@
 package com.tk.infinitykit.presentation.navigation.auth
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-
 sealed interface AuthEvent
 
 sealed interface AuthIntent {
@@ -11,5 +8,5 @@ sealed interface AuthIntent {
 }
 
 data class AuthState(
-    val backStack: SnapshotStateList<AuthenticationScreen> = mutableStateListOf()
+    val backStack: List<AuthenticationScreen> = listOf(AuthenticationScreen.LoginScreen)
 )

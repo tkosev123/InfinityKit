@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tk.infinitykit.R
 import com.tk.infinitykit.presentation.components.GenericButton
 import com.tk.infinitykit.presentation.components.IKDialog
@@ -73,7 +74,7 @@ private fun LoginScreenContent(
     onLoginClicked: (email: String, password: String) -> Unit
 ) {
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val state by stateFlow.collectAsState()
+    val state by stateFlow.collectAsStateWithLifecycle()
 
     MviScreen(stateFlow = stateFlow, eventFlow = events, onEvent = { event ->
         when (event) {
