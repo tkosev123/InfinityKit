@@ -26,35 +26,39 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun navigate(key: AuthenticationScreen) {
-        state.value.backStack.add(key)
+        updateState { push(key) }
         save()
     }
 
     private fun pop() {
         if (state.value.backStack.isNotEmpty()) {
-            state.value.backStack.removeLastOrNull()
+            updateState { pop() }
             save()
         }
     }
 
     private fun save() {
-        savedStateHandle[KEY] = state.value.backStack.map { it.id.toString() }
+        savedStateHandle[KEY_BACK_STACK] = state.value.backStack.map { it.id.toString() }
     }
 
     private fun restoreBackStack() {
-        val saved = savedStateHandle.get<List<String>>(KEY) ?: emptyList()
-        val restored = saved.map {
-            AuthenticationScreen.fromId(
-                AuthenticationScreen.AuthenticationNavIdentifiers.valueOf(it)
-            )
-        }
-        state.value.backStack.apply {
-            clear()
-            addAll(restored.ifEmpty { listOf(AuthenticationScreen.LoginScreen) })
-        }
+        val savedStack =
+            savedStateHandle.get<List<String>>(KEY_BACK_STACK)
+                ?.map { AuthenticationScreen.fromId(AuthenticationScreen.AuthenticationNavIdentifiers.valueOf(it)) }
+                ?.takeIf { it.isNotEmpty() }
+                ?: listOf(AuthenticationScreen.LoginScreen)
+
+        updateState { copy(backStack = savedStack) }
     }
 
+    private fun AuthState.push(screen: AuthenticationScreen) =
+        copy(backStack = backStack + screen)
+
+    private fun AuthState.pop() =
+        copy(backStack = backStack.dropLast(1)
+            .ifEmpty { listOf(AuthenticationScreen.LoginScreen) })
+
     companion object {
-        private const val KEY = "nav_stack"
+        private const val KEY_BACK_STACK = "auth_nav_stack"
     }
 }
