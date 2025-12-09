@@ -3,10 +3,10 @@ package com.tk.infinitykit.presentation.navigation.auth
 sealed interface AuthEvent
 
 sealed interface AuthIntent {
-    data class Navigate(val key: AuthenticationScreen) : AuthIntent
+    data class Push(val key: AuthRoute) : AuthIntent
     object Pop : AuthIntent
 }
 
 data class AuthState(
-    val backStack: List<AuthenticationScreen> = listOf(AuthenticationScreen.LoginScreen)
+    val backStack: List<AuthRoute> = listOf(AuthRoute.LoginScreen)
 )
