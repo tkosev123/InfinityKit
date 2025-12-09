@@ -20,24 +20,12 @@ import com.tk.mvi.MviScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class AuthenticationScreen(val id: AuthenticationNavIdentifiers) : NavKey {
+sealed class AuthRoute(val id: AuthRouteIdentifier) : NavKey {
     @Serializable
-    data object LoginScreen : AuthenticationScreen(AuthenticationNavIdentifiers.LOGIN)
+    data object LoginScreen : AuthRoute(AuthRouteIdentifier.LOGIN)
 
     @Serializable
-    data object RegisterScreen : AuthenticationScreen(AuthenticationNavIdentifiers.REGISTER)
-
-    companion object {
-        fun fromId(id: AuthenticationNavIdentifiers): AuthenticationScreen = when (id) {
-            AuthenticationNavIdentifiers.LOGIN -> LoginScreen
-            AuthenticationNavIdentifiers.REGISTER -> RegisterScreen
-        }
-    }
-
-    enum class AuthenticationNavIdentifiers {
-        LOGIN,
-        REGISTER
-    }
+    data object RegisterScreen : AuthRoute(AuthRouteIdentifier.REGISTER)
 }
 
 @Composable
@@ -56,14 +44,15 @@ fun AuthHost(
                 backStack = backStack,
                 viewModel = viewModel
             )
-        })
+        }
+    )
 }
 
 @Composable
 fun AuthNavGraph(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel,
-    backStack: List<AuthenticationScreen>,
+    backStack: List<AuthRoute>,
 ) {
     NavDisplay(
         modifier = modifier,
@@ -74,14 +63,14 @@ fun AuthNavGraph(
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<AuthenticationScreen.LoginScreen> {
+            entry<AuthRoute.LoginScreen> {
                 LoginScreenUi(
                     goToRegistration = {
-                        viewModel.onIntent(AuthIntent.Navigate(AuthenticationScreen.RegisterScreen))
+                        viewModel.onIntent(AuthIntent.Push(AuthRoute.RegisterScreen))
                     }
                 )
             }
-            entry<AuthenticationScreen.RegisterScreen> {
+            entry<AuthRoute.RegisterScreen> {
                 RegisterScreenUi()
             }
         },
