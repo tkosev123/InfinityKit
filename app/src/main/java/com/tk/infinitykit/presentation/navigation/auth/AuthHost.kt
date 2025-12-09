@@ -16,7 +16,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.tk.infinitykit.presentation.features.login.LoginScreenUi
 import com.tk.infinitykit.presentation.features.register.RegisterScreenUi
-import com.tk.mvi.MviScreen
+import com.tk.mvi.MviHost
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,7 +33,7 @@ fun AuthHost(
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    MviScreen(
+    MviHost(
         stateFlow = viewModel.state,
         eventFlow = viewModel.events,
         onEvent = { },

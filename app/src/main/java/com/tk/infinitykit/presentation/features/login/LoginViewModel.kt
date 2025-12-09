@@ -1,11 +1,10 @@
 package com.tk.infinitykit.presentation.features.login
 
-import android.util.Log
 import com.tk.domain.models.CredentialsValidationError
 import com.tk.domain.models.LoginError
 import com.tk.domain.models.LoginResult
 import com.tk.domain.usecase.LoginUseCase
-import com.tk.mvi.BaseViewModel
+import com.tk.mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val uiMapper: LoginErrorUiMapper
-) : BaseViewModel<LoginState, LoginEvent, LoginIntent>(LoginState()) {
+) : MviViewModel<LoginState, LoginEvent, LoginIntent>(LoginState()) {
 
     override suspend fun handleIntent(intent: LoginIntent) =
         when (intent) {

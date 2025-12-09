@@ -23,7 +23,7 @@ import com.tk.infinitykit.presentation.components.bottomnavigation.DashboardNavI
 import com.tk.infinitykit.presentation.features.chatlist.ConversationListScreenUi
 import com.tk.infinitykit.presentation.features.chatroom.ChatRoomScreenUi
 import com.tk.infinitykit.presentation.features.dashboard.DashboardScreen
-import com.tk.mvi.MviScreen
+import com.tk.mvi.MviHost
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -45,7 +45,7 @@ sealed class AppRoute : NavKey {
 fun MainHost(
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    MviScreen(
+    MviHost(
         stateFlow = viewModel.state,
         eventFlow = viewModel.events,
         onEvent = { },

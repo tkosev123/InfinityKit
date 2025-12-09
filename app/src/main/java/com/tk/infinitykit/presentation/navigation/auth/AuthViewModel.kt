@@ -1,7 +1,7 @@
 package com.tk.infinitykit.presentation.navigation.auth
 
 import androidx.lifecycle.SavedStateHandle
-import com.tk.mvi.BaseViewModel
+import com.tk.mvi.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -9,8 +9,8 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val authRouteIdentifierMapper: AuthRouteIdentifierMapper
-) : BaseViewModel<AuthState, AuthEvent, AuthIntent>(AuthState()) {
-
+) : MviViewModel<AuthState, AuthEvent, AuthIntent>(AuthState()) {
+    
     init {
         restoreBackStack()
     }
