@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<S, E, I>(initialState: S) : ViewModel() {
+abstract class MviViewModel<S, E, I>(initialState: S) : ViewModel() {
     private  val _state = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 

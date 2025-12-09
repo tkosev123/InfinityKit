@@ -13,7 +13,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.tk.infinitykit.presentation.navigation.auth.AuthHost
 import com.tk.infinitykit.presentation.navigation.main.MainHost
-import com.tk.mvi.MviScreen
+import com.tk.mvi.MviHost
 import kotlinx.serialization.Serializable
 
 sealed class Route : NavKey {
@@ -33,7 +33,7 @@ fun AppRoot(
         viewModel.onIntent(AppRootIntent.ObserveAuthState)
     }
 
-    MviScreen(
+    MviHost(
         stateFlow = viewModel.state,
         eventFlow = viewModel.events,
         onEvent = { },
