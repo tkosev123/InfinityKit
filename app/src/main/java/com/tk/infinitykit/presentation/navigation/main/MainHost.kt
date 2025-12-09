@@ -17,9 +17,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import com.tk.infinitykit.presentation.components.bottomnavigation.BottomNavigationView
-import com.tk.infinitykit.presentation.components.bottomnavigation.ChatNavItem
-import com.tk.infinitykit.presentation.components.bottomnavigation.DashboardNavItem
+import com.tk.infinitykit.presentation.components.IKBottomNavigationView
+import com.tk.infinitykit.presentation.components.ChatNavItem
+import com.tk.infinitykit.presentation.components.DashboardNavItem
+import com.tk.infinitykit.presentation.components.IKFabMenu
 import com.tk.infinitykit.presentation.features.chatlist.ConversationListScreenUi
 import com.tk.infinitykit.presentation.features.chatroom.ChatRoomScreenUi
 import com.tk.infinitykit.presentation.features.dashboard.DashboardScreen
@@ -55,21 +56,30 @@ fun MainHost(
 
             Scaffold(
                 bottomBar = {
-                    BottomNavigationView(
+                    IKBottomNavigationView(
                         selectedItem = selectedTab,
                         onItemClick = { item ->
                             viewModel.onIntent(MainIntent.SwitchRoot(item))
+                        }
+                    )
+                },
+                floatingActionButton = {
+                    IKFabMenu(
+                        isExpanded = state.isFabMenuExpanded,
+                        onToggle = {
+                            viewModel.onIntent(MainIntent.ToggleFab)
                         })
                 },
-
                 content = { innerPadding ->
                     MainNavGraph(
                         backStack = backStack,
                         innerPadding = innerPadding,
                         viewModel = viewModel
                     )
-                })
-        })
+                }
+            )
+        }
+    )
 }
 
 @Composable
@@ -86,12 +96,7 @@ fun MainNavGraph(
                 DashboardScreen(
                     modifier = Modifier.padding(innerPadding),
                     goToNextScreen = {
-                        viewModel.onIntent(
-                            MainIntent.Push(
-                                DashboardNavItem,
-                                AppRoute.Screen1
-                            )
-                        )
+                        viewModel.onIntent(MainIntent.Push(DashboardNavItem, AppRoute.Screen1))
                     }
                 )
             }
@@ -110,19 +115,14 @@ fun MainNavGraph(
                 )
             }
 
-            entry<AppRoute.Screen1> {
-                Screen1()
-            }
+            entry<AppRoute.Screen1> { Screen1() }
 
             entry<AppRoute.ChatRoom> {
-                ChatRoomScreenUi(
-                    modifier = Modifier.padding(innerPadding)
-                )
+                ChatRoomScreenUi(modifier = Modifier.padding(innerPadding))
             }
         }
     )
 }
-
 
 @Composable
 fun Screen1(modifier: Modifier = Modifier) {

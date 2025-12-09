@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class MviViewModel<S, E, I>(initialState: S) : ViewModel() {
@@ -13,7 +14,7 @@ abstract class MviViewModel<S, E, I>(initialState: S) : ViewModel() {
     val state = _state.asStateFlow()
 
     protected fun updateState(reducer: S.() -> S) {
-        _state.value = _state.value.reducer()
+       _state.update { state -> state.reducer() }
     }
 
     private val _events = MutableSharedFlow<E>()
