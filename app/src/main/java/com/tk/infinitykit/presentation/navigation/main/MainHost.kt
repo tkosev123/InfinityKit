@@ -2,6 +2,9 @@
 
 package com.tk.infinitykit.presentation.navigation.main
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -17,10 +20,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import com.tk.infinitykit.R
 import com.tk.infinitykit.presentation.components.IKBottomNavigationView
 import com.tk.infinitykit.presentation.components.ChatNavItem
 import com.tk.infinitykit.presentation.components.DashboardNavItem
+import com.tk.infinitykit.presentation.components.FabMenuItem
 import com.tk.infinitykit.presentation.components.IKFabMenu
+import com.tk.infinitykit.presentation.features.canvas.CanvasScreenUi
 import com.tk.infinitykit.presentation.features.chatlist.ConversationListScreenUi
 import com.tk.infinitykit.presentation.features.chatroom.ChatRoomScreenUi
 import com.tk.infinitykit.presentation.features.dashboard.DashboardScreen
@@ -40,6 +46,9 @@ sealed class AppRoute : NavKey {
 
     @Serializable
     data object Screen1 : AppRoute()
+
+    @Serializable
+    data object Canvas : AppRoute()
 }
 
 @Composable
@@ -49,26 +58,39 @@ fun MainHost(
     MviHost(
         stateFlow = viewModel.state,
         eventFlow = viewModel.events,
-        onEvent = { },
+        onEvent = { /* not used */ },
         content = { state ->
             val selectedTab = state.currentTab
             val backStack = state.combinedBackStack
-
+            val fabMenuItems = listOf(
+                FabMenuItem(type = FabMenuItem.FabType.LOGOUT, R.drawable.ic_logout, "Logout"),
+                FabMenuItem(type = FabMenuItem.FabType.CANVAS, R.drawable.ic_canvas, "Canvas"),
+            )
             Scaffold(
                 bottomBar = {
-                    IKBottomNavigationView(
-                        selectedItem = selectedTab,
-                        onItemClick = { item ->
-                            viewModel.onIntent(MainIntent.SwitchRoot(item))
-                        }
-                    )
+                    AnimatedVisibility(
+                        visible = state.isBottomNavVisible,
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight -> fullHeight }
+                        ),
+                        exit = slideOutVertically(
+                            targetOffsetY = { fullHeight -> fullHeight }
+                        )) {
+                        IKBottomNavigationView(
+                            selectedItem = selectedTab,
+                            onItemClick = { item ->
+                                viewModel.onIntent(MainIntent.SwitchRoot(item))
+                            }
+                        )
+                    }
                 },
                 floatingActionButton = {
                     IKFabMenu(
+                        items = fabMenuItems,
                         isExpanded = state.isFabMenuExpanded,
-                        onToggle = {
-                            viewModel.onIntent(MainIntent.ToggleFab)
-                        })
+                        onToggle = { viewModel.onIntent(MainIntent.ToggleFab) },
+                        onFabMenuItemClick = { viewModel.onIntent(MainIntent.FabMenuItemClick(it)) }
+                    )
                 },
                 content = { innerPadding ->
                     MainNavGraph(
@@ -119,6 +141,12 @@ fun MainNavGraph(
 
             entry<AppRoute.ChatRoom> {
                 ChatRoomScreenUi(modifier = Modifier.padding(innerPadding))
+            }
+
+            entry<AppRoute.Canvas> {
+                CanvasScreenUi(
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
         }
     )

@@ -26,23 +26,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.tk.infinitykit.R
 
-
 @Composable
 fun IKFabMenu(
+    items: List<FabMenuItem>,
     isExpanded: Boolean,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
+    onFabMenuItemClick: (FabMenuItem.FabType) -> Unit
 ) {
-    val items = listOf(
-        FabMenuItem(R.drawable.ic_logout, "Logout"),
-        FabMenuItem(R.drawable.ic_canvas, "Canvas"),
-    )
-
-    val rotation by animateFloatAsState(if (isExpanded) 45f else 0f)
+    val rotation by animateFloatAsState(targetValue = if (isExpanded) 45f else 0f, label = "fab-rotation")
     Column(horizontalAlignment = Alignment.End) {
         AnimatedVisibility(visible = isExpanded) {
             LazyColumn(Modifier.padding(bottom = 8.dp)) {
-                items(items.size) {
-                    ItemUi(icon = items[it].icon, title = items[it].title)
+                items(items.size) { index ->
+                    FabMenuItemRow(
+                        fabMenuItem = items[index],
+                        onFabMenuItemClick = onFabMenuItemClick
+                    )
                 }
             }
         }
@@ -65,7 +64,10 @@ fun IKFabMenu(
 }
 
 @Composable
-fun ItemUi(icon: Int, title: String) {
+fun FabMenuItemRow(
+    fabMenuItem: FabMenuItem,
+    onFabMenuItemClick: (FabMenuItem.FabType) -> Unit
+) {
     Row(
         modifier = Modifier.padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -77,12 +79,12 @@ fun ItemUi(icon: Int, title: String) {
                 .border(1.dp, MaterialTheme.colorScheme.onSurface, RoundedCornerShape(10.dp))
                 .padding(8.dp)
         ) {
-            Text(text = title)
+            Text(text = fabMenuItem.title)
         }
         Spacer(modifier = Modifier.padding(8.dp))
 
         FloatingActionButton(
-            onClick = { },
+            onClick = { onFabMenuItemClick(fabMenuItem.type) },
             modifier = Modifier
                 .padding(end = 4.dp)
                 .size(48.dp),
@@ -90,7 +92,7 @@ fun ItemUi(icon: Int, title: String) {
         ) {
             Image(
                 modifier = Modifier.size(24.dp),
-                painter = painterResource(icon),
+                painter = painterResource(fabMenuItem.icon),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
             )
@@ -99,6 +101,12 @@ fun ItemUi(icon: Int, title: String) {
 }
 
 data class FabMenuItem(
+    val type: FabType,
     val icon: Int,
     val title: String
-)
+) {
+    enum class FabType {
+        CANVAS,
+        LOGOUT
+    }
+}
