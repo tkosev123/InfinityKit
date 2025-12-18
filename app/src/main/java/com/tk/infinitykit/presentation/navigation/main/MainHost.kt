@@ -60,8 +60,8 @@ fun MainHost(
         eventFlow = viewModel.events,
         onEvent = { /* not used */ },
         content = { state ->
-            val selectedTab = state.currentTab
-            val backStack = state.combinedBackStack
+            val selectedTab = state.backStackConfig.currentTab
+            val backStack = state.backStackConfig.combinedBackStack
             val fabMenuItems = listOf(
                 FabMenuItem(type = FabMenuItem.FabType.LOGOUT, R.drawable.ic_logout, "Logout"),
                 FabMenuItem(type = FabMenuItem.FabType.CANVAS, R.drawable.ic_canvas, "Canvas"),

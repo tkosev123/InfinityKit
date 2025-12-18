@@ -83,7 +83,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun handleError(error: RegisterError, message: String) {
+    private suspend fun handleError(error: RegisterError, message: String) {
         when (error) {
             is RegisterError.Validation -> handleValidationError(error.error, message)
 
@@ -119,7 +119,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun handleValidationError(
+    private suspend fun handleValidationError(
         validationError: CredentialsValidationError,
         message: String
     ) {
