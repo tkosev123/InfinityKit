@@ -1,8 +1,7 @@
 package com.tk.infinitykit.presentation.navigation.main
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.tk.infinitykit.presentation.components.BottomNavItem
+import com.tk.infinitykit.presentation.components.ChatNavItem
 import com.tk.infinitykit.presentation.components.DashboardNavItem
 import com.tk.infinitykit.presentation.components.FabMenuItem
 
@@ -25,6 +24,9 @@ data class MainState(
 data class BackStackConfig(
     val rootTab: BottomNavItem = DashboardNavItem,
     val currentTab: BottomNavItem = DashboardNavItem,
-    val tabBackStacks: MutableMap<BottomNavItem, SnapshotStateList<AppRoute>> = mutableMapOf(),
-    val combinedBackStack: SnapshotStateList<AppRoute> = mutableStateListOf()
+    val tabBackStacks: Map<BottomNavItem, List<AppRoute>> = mapOf(
+        DashboardNavItem to listOf(AppRoute.Dashboard),
+        ChatNavItem to listOf(AppRoute.ConversationListPreview)
+    ),
+    val combinedBackStack: List<AppRoute> = listOf(AppRoute.Dashboard)
 )
