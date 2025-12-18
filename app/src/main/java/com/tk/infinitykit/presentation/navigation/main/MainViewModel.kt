@@ -1,9 +1,7 @@
 package com.tk.infinitykit.presentation.navigation.main
 
-import androidx.compose.runtime.mutableStateListOf
 import com.tk.domain.usecase.LogoutUseCase
 import com.tk.infinitykit.presentation.components.BottomNavItem
-import com.tk.infinitykit.presentation.components.ChatNavItem
 import com.tk.infinitykit.presentation.components.DashboardNavItem
 import com.tk.infinitykit.presentation.components.FabMenuItem
 import com.tk.mvi.MviViewModel
@@ -12,17 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase) :
-    MviViewModel<MainState, MainEvent, MainIntent>(
-        initialState = MainState(
-            backStackConfig = BackStackConfig(
-                tabBackStacks = mapOf(
-                    DashboardNavItem to listOf(AppRoute.Dashboard),
-                    ChatNavItem to listOf(AppRoute.ConversationListPreview)
-                ),
-                combinedBackStack = mutableStateListOf(AppRoute.Dashboard),
-            )
-        )
-    ) {
+    MviViewModel<MainState, MainEvent, MainIntent>(initialState = MainState()) {
 
     override suspend fun handleIntent(intent: MainIntent) {
         when (intent) {
