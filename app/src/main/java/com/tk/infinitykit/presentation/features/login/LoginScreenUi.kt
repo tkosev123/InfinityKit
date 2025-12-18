@@ -82,7 +82,8 @@ private fun LoginScreenContent(
             when (event) {
                 is LoginEvent.ShowError -> errorMessage = event.message
             }
-        }, content = {
+        },
+        content = {
             Column(
                 modifier = modifier
                     .fillMaxSize()

@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
         }
     }
 
-    private fun handleFabClick(type: FabMenuItem.FabType) {
+    private suspend fun handleFabClick(type: FabMenuItem.FabType) {
         when (type) {
             FabMenuItem.FabType.CANVAS -> {
                 updateState { copy(isFabMenuExpanded = false, isBottomNavVisible = false) }
@@ -45,12 +45,12 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
         }
     }
 
-    private fun switchRoot(root: BottomNavItem) {
+    private suspend fun switchRoot(root: BottomNavItem) {
         updateState { copy(currentTab = root) }
         updateCombinedBackStack()
     }
 
-    private fun pop() {
+    private suspend fun pop() {
         val currentTab = state.value.currentTab
         updateState {
             val newStack = state.value.tabBackStacks.toMutableMap()

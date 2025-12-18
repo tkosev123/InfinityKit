@@ -44,7 +44,7 @@ fun GenericButton(
             .height(ButtonDefaults.MinHeight)
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .clickable { onClick() },
+            .clickable { if(isLoading.not()) onClick() },
         contentAlignment = Alignment.Center
     ) {
         if (isLoading) {

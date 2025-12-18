@@ -9,12 +9,14 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val authRouteIdentifierMapper: AuthRouteIdentifierMapper
-) : MviViewModel<AuthState, AuthEvent, AuthIntent>(AuthState()) {
-    
-    init {
-        restoreBackStack()
-    }
-
+) : MviViewModel<AuthState, AuthEvent, AuthIntent>(
+    AuthState(
+        backStack = restoreBackStack(
+            savedStateHandle,
+            authRouteIdentifierMapper
+        )
+    )
+) {
     override suspend fun handleIntent(intent: AuthIntent) {
         when (intent) {
             is AuthIntent.Push -> push(intent.key)
@@ -23,12 +25,12 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun push(key: AuthRoute) {
+    private suspend fun push(key: AuthRoute) {
         updateState { push(key) }
         save()
     }
 
-    private fun pop() {
+    private suspend fun pop() {
         if (state.value.backStack.isNotEmpty()) {
             updateState { pop() }
             save()
@@ -39,24 +41,26 @@ class AuthViewModel @Inject constructor(
         savedStateHandle[KEY_BACK_STACK] = state.value.backStack.map { it.id.toString() }
     }
 
-    private fun restoreBackStack() {
-        val savedStack =
-            savedStateHandle.get<List<String>>(KEY_BACK_STACK)
-                ?.map { authRouteIdentifierMapper.mapToRoute(it) }
-                ?.takeIf { it.isNotEmpty() }
-                ?: listOf(AuthRoute.LoginScreen)
-
-        updateState { copy(backStack = savedStack) }
-    }
-
     private fun AuthState.push(screen: AuthRoute) =
         copy(backStack = backStack + screen)
 
     private fun AuthState.pop() =
-        copy(backStack = backStack.dropLast(1)
-            .ifEmpty { listOf(AuthRoute.LoginScreen) })
+        copy(
+            backStack = backStack.dropLast(1)
+                .ifEmpty { listOf(AuthRoute.LoginScreen) })
 
     companion object {
         private const val KEY_BACK_STACK = "auth_nav_stack"
+
+        fun restoreBackStack(
+            savedStateHandle: SavedStateHandle,
+            mapper: AuthRouteIdentifierMapper
+        ): List<AuthRoute> {
+            return savedStateHandle
+                .get<List<String>>(KEY_BACK_STACK)
+                ?.map(mapper::mapToRoute)
+                ?.takeIf(List<AuthRoute>::isNotEmpty)
+                ?: listOf(AuthRoute.LoginScreen)
+        }
     }
 }
