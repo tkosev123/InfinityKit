@@ -3,6 +3,8 @@ plugins {
     id("com.tk.buildlogic.kotlin")
     id("com.tk.buildlogic.android.library.compose")
     alias(libs.plugins.compose.compiler)
+    id("com.tk.buildlogic.lint.report")
+
 }
 
 android {
