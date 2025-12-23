@@ -6,6 +6,7 @@ plugins {
     id("com.tk.buildlogic.android.library.compose")
     id("com.tk.buildlogic.kotlin.serialization")
     id("com.tk.buildlogic.jacoco.report")
+    id("com.tk.buildlogic.lint.report")
     alias(libs.plugins.compose.compiler)
 }
 
@@ -14,6 +15,7 @@ android {
 }
 
 dependencies {
+    /* ----------- Modules ----------- */
     implementation(project(":di"))
     implementation(project(":domain"))
     implementation(project(":mvi"))
@@ -27,6 +29,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.kotlinx.serialization.json)
 
-    /* -----------Testing ----------- */
+    /* ----------- Testing ----------- */
     implementation(libs.androidx.junit)
+    implementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

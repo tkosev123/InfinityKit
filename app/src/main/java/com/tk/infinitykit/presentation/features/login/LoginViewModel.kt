@@ -54,7 +54,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleError(error: LoginError, message: String) {
+    private fun handleError(error: LoginError, message: String) {
         when (error) {
             is LoginError.Validation -> handleValidationError(error.error, message)
 
@@ -83,7 +83,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleValidationError(
+    private fun handleValidationError(
         validationError: CredentialsValidationError,
         message: String
     ) {
