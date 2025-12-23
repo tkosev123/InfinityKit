@@ -2,49 +2,46 @@ package com.tk.mvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
-abstract class MviViewModel<S, E, I>(initialState: S) : ViewModel() {
-    private val stateMutex = Mutex()
+abstract class MviViewModel<S, E, I>(
+    initialState: S,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Main
+) : ViewModel() {
 
-    private  val _state = MutableStateFlow(initialState)
-    val state = _state.asStateFlow()
+    protected val _state = MutableStateFlow(initialState)
+    val state: StateFlow<S> = _state.asStateFlow()
 
-    protected suspend fun updateState(reducer: S.() -> S) {
-        stateMutex.withLock {
-            _state.update { state -> state.reducer() }
-        }
-    }
-
-    private val _events = MutableSharedFlow<E>(
+    protected val _events = MutableSharedFlow<E>(
         replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        extraBufferCapacity = 1
     )
-    val events = _events.asSharedFlow()
+    val events: SharedFlow<E> = _events.asSharedFlow()
 
-    protected fun sendEvent(event: E) {
-        viewModelScope.launch {
-            _events.emit(event)
-        }
-    }
-
-    private val intentScope = viewModelScope + Dispatchers.Default.limitedParallelism(1)
+    private val intentScope = viewModelScope + dispatcher
 
     fun onIntent(intent: I) {
         intentScope.launch {
             handleIntent(intent)
         }
+    }
+
+    protected fun updateState(reducer: S.() -> S) {
+        _state.update { it.reducer() }
+    }
+
+    protected suspend fun sendEvent(event: E) {
+        _events.emit(event)
     }
 
     protected abstract suspend fun handleIntent(intent: I)

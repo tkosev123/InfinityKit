@@ -47,6 +47,11 @@ gradlePlugin {
             id = "com.tk.buildlogic.jacoco.report"
             implementationClass = "convention.JacocoAndroidConventionPlugin"
         }
+
+        register("LintReport") {
+            id = "com.tk.buildlogic.lint.report"
+            implementationClass = "convention.AndroidLintConventionPlugin"
+        }
     }
 }
 
