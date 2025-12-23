@@ -36,19 +36,19 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
     private suspend fun switchRoot(root: BottomNavItem) {
         updateState {
             val config = backStackConfig
-            val tabStack = config.tabBackStacks[root] ?: listOf(AppRoute.Dashboard)
+            val tabStack = config.tabStacks[root] ?: listOf(AppRoute.Dashboard)
 
             val combined = buildCombinedBackStack(
                 rootTab = config.rootTab,
                 currentTab = root,
-                tabBackStacks = config.tabBackStacks + (root to tabStack)
+                tabStacks = config.tabStacks + (root to tabStack)
             )
 
             copy(
                 backStackConfig = config.copy(
                     currentTab = root,
                     combinedBackStack = combined,
-                    tabBackStacks = config.tabBackStacks + (root to tabStack)
+                    tabStacks = config.tabStacks + (root to tabStack)
                 ),
                 isBottomNavVisible = true,
                 isFabMenuExpanded = false
@@ -60,22 +60,22 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
         updateState {
             val config = backStackConfig
             val currentTab = config.currentTab
-            val currentStack = config.tabBackStacks[currentTab] ?: return@updateState this
+            val currentStack = config.tabStacks[currentTab] ?: return@updateState this
 
             if (currentStack.size > 1) {
                 val updatedStack = currentStack.dropLast(1)
                 val updatedStacks =
-                    config.tabBackStacks + (currentTab to updatedStack)
+                    config.tabStacks + (currentTab to updatedStack)
 
                 val combined = buildCombinedBackStack(
                     rootTab = config.rootTab,
                     currentTab = currentTab,
-                    tabBackStacks = updatedStacks
+                    tabStacks = updatedStacks
                 )
 
                 return@updateState copy(
                     backStackConfig = config.copy(
-                        tabBackStacks = updatedStacks,
+                        tabStacks = updatedStacks,
                         combinedBackStack = combined
                     ),
                     isBottomNavVisible = updatedStack.size == 1,
@@ -87,7 +87,7 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
                 val combined = buildCombinedBackStack(
                     rootTab = config.rootTab,
                     currentTab = config.rootTab,
-                    tabBackStacks = config.tabBackStacks
+                    tabStacks = config.tabStacks
                 )
 
                 return@updateState copy(
@@ -106,21 +106,21 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
     private suspend fun push(root: BottomNavItem, route: AppRoute) {
         updateState {
             val config = backStackConfig
-            val currentStack = config.tabBackStacks[root] ?: return@updateState this
+            val currentStack = config.tabStacks[root] ?: return@updateState this
 
             val updatedStacks =
-                config.tabBackStacks + (root to (currentStack + route))
+                config.tabStacks + (root to (currentStack + route))
 
             val combined = buildCombinedBackStack(
                 rootTab = config.rootTab,
                 currentTab = root,
-                tabBackStacks = updatedStacks
+                tabStacks = updatedStacks
             )
 
             copy(
                 backStackConfig = config.copy(
                     currentTab = root,
-                    tabBackStacks = updatedStacks,
+                    tabStacks = updatedStacks,
                     combinedBackStack = combined
                 )
             )
@@ -130,10 +130,10 @@ class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase
     private fun buildCombinedBackStack(
         rootTab: BottomNavItem,
         currentTab: BottomNavItem,
-        tabBackStacks: Map<BottomNavItem, List<AppRoute>>
+        tabStacks: Map<BottomNavItem, List<AppRoute>>
     ): List<AppRoute> {
-        val rootStack = tabBackStacks[rootTab].orEmpty()
-        val currentStack = tabBackStacks[currentTab].orEmpty()
+        val rootStack = tabStacks[rootTab].orEmpty()
+        val currentStack = tabStacks[currentTab].orEmpty()
 
         return if (rootTab == currentTab) {
             rootStack

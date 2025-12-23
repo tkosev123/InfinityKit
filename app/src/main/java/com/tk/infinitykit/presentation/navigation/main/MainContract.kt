@@ -24,7 +24,7 @@ data class MainState(
 data class BackStackConfig(
     val rootTab: BottomNavItem = DashboardNavItem,
     val currentTab: BottomNavItem = DashboardNavItem,
-    val tabBackStacks: Map<BottomNavItem, List<AppRoute>> = mapOf(
+    val tabStacks: Map<BottomNavItem, List<AppRoute>> = mapOf(
         DashboardNavItem to listOf(AppRoute.Dashboard),
         ChatNavItem to listOf(AppRoute.ConversationListPreview)
     ),
