@@ -12,6 +12,7 @@ class AndroidLintConventionPlugin: Plugin<Project> {
                 warningsAsErrors = true
                 checkReleaseBuilds = true
                 baseline = file("$rootDir/lint-baseline.xml")
+                disable.add("AndroidGradlePluginVersion")
             }
         }
     }
