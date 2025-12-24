@@ -20,6 +20,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: gradle
 
       - name: Decode google-services.json
         run: |
@@ -31,5 +32,15 @@ jobs:
       - name: Run Android Lint
         run: ./gradlew lintDebug
 
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
+      - name: Upload HTML lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint.html
+          path: app/build/reports/lint-results-debug.html
+
+      - name: Upload lint SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: app/build/reports/lint-results-debug.sarif

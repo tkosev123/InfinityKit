@@ -9,6 +9,7 @@ class AndroidLintConventionPlugin: Plugin<Project> {
         extensions.configure<CommonExtension<*, *, *, *, *, *>>("android") {
             lint {
                 abortOnError = true
+                sarifReport = true
                 warningsAsErrors = true
                 checkReleaseBuilds = true
                 baseline = file("$rootDir/lint-baseline.xml")
