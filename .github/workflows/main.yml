@@ -2,9 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [develop]
+    branches:
+      - 'develop'
   pull_request:
-    branches: [develop]
+    types:
+      - opened
+    branches:
+     - 'develop'
   workflow_dispatch:
 
 jobs:
@@ -12,22 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: gradle
-
-      - name: Decode google-services.json
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
-
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Android Setup
+        uses: ./.github/actions/android-setup
 
       - name: Run Android Lint
         run: ./gradlew lintDebug
@@ -44,3 +34,12 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: app/build/reports/lint-results-debug.sarif
+
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: ./.github/actions/android-setup
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
