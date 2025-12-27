@@ -9,7 +9,7 @@ android {
 
 dependencies {
     /* ----------- Testing ----------- */
-    implementation(libs.androidx.junit)
-    implementation(libs.mockk)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 }

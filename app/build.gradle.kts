@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":mvi"))
 
+    /* ----------- Dependencies ----------- */
     implementation(libs.core.splashscreen)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
@@ -30,7 +31,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     /* ----------- Testing ----------- */
-    implementation(libs.androidx.junit)
-    implementation(libs.mockk)
+    testImplementation(libs.bundles.unittest)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.bundles.androidtest)
 }

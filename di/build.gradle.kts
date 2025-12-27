@@ -3,6 +3,7 @@ plugins {
     id("com.tk.buildlogic.kotlin")
     id("com.tk.buildlogic.hilt")
     id("com.tk.buildlogic.lint.report")
+    id("com.tk.buildlogic.jacoco.report")
 }
 
 android {
@@ -10,12 +11,15 @@ android {
 }
 
 dependencies {
+    /* ----------- Modules ----------- */
     implementation(project(":domain"))
     implementation(project(":data"))
+
+    /* ----------- Dependencies ----------- */
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
 
     /* -----------Testing ----------- */
-    implementation(libs.androidx.junit)
+    testImplementation(libs.bundles.unittest)
 }
