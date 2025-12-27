@@ -2,10 +2,18 @@ name: CI
 
 on:
   push:
-    branches: [develop]
+    branches:
+      - '**'
   pull_request:
-    branches: [develop]
+    types:
+      - opened
+    branches:
+      - 'develop'
   workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
   lint:
@@ -15,19 +23,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Android Setup
+        uses: ./.github/actions/android-setup
         with:
-          distribution: temurin
-          java-version: 17
-          cache: gradle
-
-      - name: Decode google-services.json
-        run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
-
-      - name: Setup gradle
-        uses: gradle/actions/setup-gradle@v3
+          google-services-json: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: Run Android Lint
         run: ./gradlew lintDebug
@@ -41,6 +40,48 @@ jobs:
 
       - name: Upload lint SARIF
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: app/build/reports/lint-results-debug.sarif
+
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Android Setup
+        uses: ./.github/actions/android-setup
+        with:
+          google-services-json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+  jacoco:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Android Setup
+        uses: ./.github/actions/android-setup
+        with:
+          google-services-json: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+      - name: Run jacoco
+        run: ./gradlew jacocoDebugReport
+
+      - name: Upload JaCoCo HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-html
+          path: app/build/reports/jacoco/jacocoDebugReport/html
+
+      - name: Upload JaCoCo XML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-xml
+          path: app/build/reports/jacoco/jacocoDebugReport/jacocoDebugReport.xml
