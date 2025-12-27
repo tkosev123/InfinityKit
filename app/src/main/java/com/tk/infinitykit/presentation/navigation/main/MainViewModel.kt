@@ -1,0 +1,144 @@
+package com.tk.infinitykit.presentation.navigation.main
+
+import com.tk.domain.usecase.LogoutUseCase
+import com.tk.infinitykit.presentation.components.BottomNavItem
+import com.tk.infinitykit.presentation.components.DashboardNavItem
+import com.tk.infinitykit.presentation.components.FabMenuItem
+import com.tk.mvi.MviViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class MainViewModel @Inject constructor(private val logoutUseCase: LogoutUseCase) :
+    MviViewModel<MainState, MainEvent, MainIntent>(initialState = MainState()) {
+
+    override suspend fun handleIntent(intent: MainIntent) {
+        when (intent) {
+            is MainIntent.Push -> push(intent.root, intent.route)
+            is MainIntent.Pop -> pop()
+            is MainIntent.SwitchRoot -> switchRoot(intent.root)
+            is MainIntent.ToggleFab -> updateState { copy(isFabMenuExpanded = !isFabMenuExpanded) }
+            is MainIntent.FabMenuItemClick -> handleFabClick(intent.type)
+        }
+    }
+
+    private suspend fun handleFabClick(type: FabMenuItem.FabType) {
+        when (type) {
+            FabMenuItem.FabType.CANVAS -> {
+                updateState { copy(isFabMenuExpanded = false, isBottomNavVisible = false) }
+                push(DashboardNavItem, AppRoute.Canvas)
+            }
+
+            FabMenuItem.FabType.LOGOUT -> logoutUseCase.invoke()
+        }
+    }
+
+    private suspend fun switchRoot(root: BottomNavItem) {
+        updateState {
+            val config = backStackConfig
+            val tabStack = config.tabStacks[root] ?: listOf(AppRoute.Dashboard)
+
+            val combined = buildCombinedBackStack(
+                rootTab = config.rootTab,
+                currentTab = root,
+                tabStacks = config.tabStacks + (root to tabStack)
+            )
+
+            copy(
+                backStackConfig = config.copy(
+                    currentTab = root,
+                    combinedBackStack = combined,
+                    tabStacks = config.tabStacks + (root to tabStack)
+                ),
+                isBottomNavVisible = true,
+                isFabMenuExpanded = false
+            )
+        }
+    }
+
+    private suspend fun pop() {
+        updateState {
+            val config = backStackConfig
+            val currentTab = config.currentTab
+            val currentStack = config.tabStacks[currentTab] ?: return@updateState this
+
+            if (currentStack.size > 1) {
+                val updatedStack = currentStack.dropLast(1)
+                val updatedStacks =
+                    config.tabStacks + (currentTab to updatedStack)
+
+                val combined = buildCombinedBackStack(
+                    rootTab = config.rootTab,
+                    currentTab = currentTab,
+                    tabStacks = updatedStacks
+                )
+
+                return@updateState copy(
+                    backStackConfig = config.copy(
+                        tabStacks = updatedStacks,
+                        combinedBackStack = combined
+                    ),
+                    isBottomNavVisible = updatedStack.size == 1,
+                    isFabMenuExpanded = false
+                )
+            }
+
+            if (currentTab != config.rootTab) {
+                val combined = buildCombinedBackStack(
+                    rootTab = config.rootTab,
+                    currentTab = config.rootTab,
+                    tabStacks = config.tabStacks
+                )
+
+                return@updateState copy(
+                    backStackConfig = config.copy(
+                        currentTab = config.rootTab,
+                        combinedBackStack = combined
+                    ),
+                    isFabMenuExpanded = false
+                )
+            }
+
+            copy(isFabMenuExpanded = false)
+        }
+    }
+
+    private suspend fun push(root: BottomNavItem, route: AppRoute) {
+        updateState {
+            val config = backStackConfig
+            val currentStack = config.tabStacks[root] ?: return@updateState this
+
+            val updatedStacks =
+                config.tabStacks + (root to (currentStack + route))
+
+            val combined = buildCombinedBackStack(
+                rootTab = config.rootTab,
+                currentTab = root,
+                tabStacks = updatedStacks
+            )
+
+            copy(
+                backStackConfig = config.copy(
+                    currentTab = root,
+                    tabStacks = updatedStacks,
+                    combinedBackStack = combined
+                )
+            )
+        }
+    }
+
+    private fun buildCombinedBackStack(
+        rootTab: BottomNavItem,
+        currentTab: BottomNavItem,
+        tabStacks: Map<BottomNavItem, List<AppRoute>>
+    ): List<AppRoute> {
+        val rootStack = tabStacks[rootTab].orEmpty()
+        val currentStack = tabStacks[currentTab].orEmpty()
+
+        return if (rootTab == currentTab) {
+            rootStack
+        } else {
+            rootStack + currentStack
+        }
+    }
+}
