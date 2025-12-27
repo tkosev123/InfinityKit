@@ -3,6 +3,7 @@ plugins {
     id("com.tk.buildlogic.kotlin")
     id("com.tk.buildlogic.hilt")
     id("com.tk.buildlogic.lint.report")
+    id("com.tk.buildlogic.jacoco.report")
 }
 
 android {
@@ -11,5 +12,5 @@ android {
 
 dependencies {
     /* -----------Testing ----------- */
-    implementation(libs.androidx.junit)
+    testImplementation(libs.bundles.unittest)
 }

@@ -4,7 +4,7 @@ plugins {
     id("com.tk.buildlogic.android.library.compose")
     alias(libs.plugins.compose.compiler)
     id("com.tk.buildlogic.lint.report")
-
+    id("com.tk.buildlogic.jacoco.report")
 }
 
 android {
@@ -12,6 +12,9 @@ android {
 }
 
 dependencies {
+    /* ----------- Dependencies ----------- */
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.junit)
+
+    /* -----------Testing ----------- */
+    testImplementation(libs.bundles.unittest)
 }
